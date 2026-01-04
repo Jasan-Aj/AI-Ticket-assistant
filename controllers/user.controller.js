@@ -49,7 +49,7 @@ export const signup = async (req, res)=>{
     }
 }
 
-export const sigin = async (req, res)=>{
+export const signin = async (req, res)=>{
 
     try{
         const {email, password} = req.body;
@@ -84,7 +84,7 @@ export const sigin = async (req, res)=>{
     }
 }
 
-export const logout = async (req, res)=>{
+export const signout = async (req, res)=>{
     
 }
 
@@ -93,6 +93,11 @@ export const updateUser = async (req, res)=>{
     session.startTransaction();
 
     try{
+
+        if(req.user.role !== "admin"){
+            throw new Error("unouthorized");
+        }
+
         const {email, skills= [], role} = req.body;
         const user = await User.findOne(email).session(session);
         if(!user){
@@ -120,11 +125,32 @@ export const updateUser = async (req, res)=>{
             await session.abortTransaction();
         }
         session.endSession();
-        console.log("Error in sign-up: ", error);
+        console.log("Error in update user: ", error);
         
         return res.status(500).json({
             success: false,
             error: error
         });
+    }
+}
+
+export const getUsers = async (req, res)=>{
+    try{
+
+        if(req.user.role !== "admin"){
+            throw new Error("Not authorized!");
+        }
+
+        const users = await User.find().select("-password");
+        return res.status(200).json({
+            succes: true,
+            data: users
+        });
+
+    }catch(error){
+        return res.status(500).json({
+            success: false,
+            error: error
+        }); 
     }
 }

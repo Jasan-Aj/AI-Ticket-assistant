@@ -24,7 +24,7 @@ export const authenticate = async (req, res, next)=>{
         next();
         
     }catch(error){
-        res.send({
+        res.status(402).json({
             success: false,
             error: "Not authorized!"
         });
