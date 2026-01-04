@@ -2,9 +2,9 @@ import {inngest} from "../client.js";
 import User from "../../models/user.model.js";
 import {sendMail} from "../../utils/mailer.js"
 
-export const sendWellcomeMail = inngest.createFunction(
+export const onUserSignUp = inngest.createFunction(
     {
-        id: "send-greeting-mail",
+        id: "on-user-sign-up",
         name: "Greeting mail send",
         retries: 2
     },
