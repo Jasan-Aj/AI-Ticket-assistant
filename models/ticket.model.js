@@ -19,8 +19,7 @@ const ticketSchema = new mongoose.Schema({
         enum: ["Pending", "Processing", "Completed"]
     },
     createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        type: mongoose.Schema.Types.String,
     },
     assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
