@@ -36,3 +36,25 @@ const createTicket = async(req, res)=>{
         });
     }
 }
+
+const getTickets = async (req, res)=>{
+    try{
+        const user = req.user;
+        let tickets = [];
+        if(user.role !== user){
+            tickets = await Ticket.find().sort({createdAt: -1});
+        }else{
+            tickets = (await Ticket.find()).filter({
+                createdBy: user._id.toString()
+            }).sort({
+                createdAt: -1
+            });
+        }
+
+        return res.status(200).json(tickets)
+    }catch(error){
+        return res.status(500).json({
+            message: "Internal sserver error"
+        });
+    }
+}
