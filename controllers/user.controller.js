@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import inngest from "../inngest/client.js";
 
 export const signup = async (req, res)=>{
     const session = await mongoose.startSession();
@@ -9,7 +10,7 @@ export const signup = async (req, res)=>{
 
     try{
         const {name, email, password, skills =[]} = req.body;
-        const isUserExist = await User.findOne(email).ession(session);
+        const isUserExist = await User.findOne(email).session(session);
 
         if(isUserExist){
             throw new Error("User already exist!");
@@ -26,6 +27,11 @@ export const signup = async (req, res)=>{
 
         await session.commitTransaction();
         session.endSession();
+
+        await inngest.run({
+            name: "user/sign-up",
+            data: {email}
+        });
 
         return res.status(201).json({
             succes: true,

@@ -4,7 +4,7 @@ import {sendMail} from "../../utils/mailer.js"
 
 export const onUserSignUp = inngest.createFunction(
     {
-        id: "on-user-sign-up",
+        id: "on-signUp",
         name: "Greeting mail send",
         retries: 2
     },
@@ -26,7 +26,7 @@ export const onUserSignUp = inngest.createFunction(
                 return userObject;
             });
 
-            //step 02: 
+            //step 02: send welcome mail 
             await step.run("send-email", async()=>{
                 const subject = `Wellcome ${user.name || 'unknown'}`;
                 const body = `Hi ${user.name || 'unknown'}

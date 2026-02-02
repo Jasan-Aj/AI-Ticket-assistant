@@ -29,6 +29,8 @@ const ticketSchema = new mongoose.Schema({
     },
     priority: {
         type: String,
+        enum: ["low", "medium", "high"],
+        default: "medium"
     },
     deadLine: {
         type: Date
