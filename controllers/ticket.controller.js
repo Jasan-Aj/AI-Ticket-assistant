@@ -2,7 +2,7 @@ import Ticket from "../models/ticket.model";
 import { inngest } from "../inngest/client";
 
 
-const createTicket = async(req, res)=>{
+export const createTicket = async(req, res)=>{
     try{
         const {title, description} = req.body;
         if(!title || !description){
@@ -37,12 +37,12 @@ const createTicket = async(req, res)=>{
     }
 }
 
-const getTickets = async (req, res)=>{
+export const getTickets = async (req, res)=>{
     try{
         const user = req.user;
         let tickets = [];
-        if(user.role !== user){
-            tickets = await Ticket.find().sort({createdAt: -1});
+        if(user.role !== "user"){
+            tickets = await Ticket.find().populate("AssignedTo",["email","name"]).sort({createdAt: -1});
         }else{
             tickets = (await Ticket.find()).filter({
                 createdBy: user._id.toString()
@@ -55,6 +55,31 @@ const getTickets = async (req, res)=>{
     }catch(error){
         return res.status(500).json({
             message: "Internal sserver error"
+        });
+    }
+}
+
+export const getTicket = async (req, res)=>{
+    const ticketId = req.params.id;
+    const user = req.user;
+    try{
+        if(user.role !== "user"){
+            const ticket = await Ticket.findById(ticketId).populate("AssignedTo",["email", "name"]);
+        }else{
+            const ticket = await Ticket.findById(ticketId);
+        }
+
+        if(!ticket){
+            res.status(400).json({
+                message: "Ticket does not exist!"
+            });
+        }
+
+        res.status(200).json(ticket);
+    }catch(error){
+        console.log("Internal server error: ", error);
+        res.status(500).json({
+            message: "Internal server error"
         });
     }
 }

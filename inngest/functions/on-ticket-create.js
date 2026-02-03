@@ -5,7 +5,7 @@ import { NonRetriableError } from "inngest";
 import { analyzeTicket } from "../../utils/ai-agents/ticket-analyzer.agent.js";
 import { sendMail } from "../../utils/mailer.js";
 
-const onTicketCreated = inngest.createFunction(
+export const onTicketCreated = inngest.createFunction(
     {id: "on-ticket-create", retries:2},
     {event: "user/on-ticket-create"},
     async ({event, step})=>{
