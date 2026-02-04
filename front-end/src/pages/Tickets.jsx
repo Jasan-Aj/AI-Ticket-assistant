@@ -1,8 +1,11 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
 
 function Tickets() {
   return (
-    <div className=''>Tickets</div>
+    <div>
+      <Navbar/>
+    </div>
   )
 }
 
