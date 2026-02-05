@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Login() {
 
@@ -69,7 +69,7 @@ function Login() {
   return (
     <div className='bg-gray-100 w-screen h-screen'>
       <div className='flex justify-center h-screen items-center'>
-        <div className='border-1 bg-white shadow shadow-blue-950 rounded rounded-lg'>
+        <div className=' bg-white  border  border-b-3 border-r-3 rounded-lg'>
           <div className='text-black text-2xl font-semibold text-center py-4'>Login</div>
           <form onSubmit={handleSubmit}>
             <div className='px-4 pt-4 flex flex-col'>
@@ -83,12 +83,12 @@ function Login() {
             </div>
 
             <div className='py-5 flex justify-center px-4'>
-              <button type='submit' className='bg-blue-700 py-2 w-full font-semibold rounded-lg cursor-pointer'>Login</button>
+              <button type='submit' className='bg-blue-700 py-2 w-full font-semibold rounded-lg cursor-pointer text-white'>Login</button>
             </div>
           </form>
           <div className='text-sm flex justify-center pt-1 pb-4'>
             <p className='text-black'>Dont have an account?</p>
-            <a className='text-blue-800 font-semibold pl-2 cursor-pointer' onClick={()=>navigate("/signup")}>Signup</a>
+            <Link className='text-blue-800 font-semibold pl-2 cursor-pointer' to={"/signup"} >Signup</Link>
           </div>
         </div>
         {

@@ -4,10 +4,11 @@ import './index.css'
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 import CheckAuth from './components/CheckAuth.jsx'
 import Tickets from "./pages/Tickets.jsx"
-import TicketDetailsPage from "./pages/TicketDetailsPage.jsx"
+import TicketDetails from "./pages/TicketDetailsPage.jsx"
 import Login from "./pages/Login.jsx"
 import Signup from "./pages/Signup.jsx"
 import Admin from "./pages/Admin.jsx"
+import UserTicketDetails from "./pages/UserTicketDetails.jsx"
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -23,10 +24,19 @@ createRoot(document.getElementById('root')).render(
         />
 
         <Route
-          path='/tickets:id'
+          path='/tickets/:id'
           element = {
-            <CheckAuth protectedRoute={true}>
-              <TicketDetailsPage/>
+            <CheckAuth protectedRoute={false}>
+              <TicketDetails/>
+            </CheckAuth>
+          }
+        />
+
+        <Route
+          path='/usertickets/:id'
+          element = {
+            <CheckAuth protectedRoute={false}>
+              <UserTicketDetails/>
             </CheckAuth>
           }
         />

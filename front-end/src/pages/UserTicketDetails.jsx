@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const TicketDetails = () => {
+const UserTicketDetails = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   const ticket =  {
@@ -237,21 +237,7 @@ const TicketDetails = () => {
             </div>
 
             {/* AI Description (if exists) */}
-            {ticket?.aiDescription && (
-              <div className="space-y-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-2xl border border-blue-100 dark:border-blue-800/30">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold">AI</span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                    AI Suggestion
-                  </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {ticket.aiDescription}
-                </p>
-              </div>
-            )}
+            
           </div>
 
           {/* Skills Section - Scrollbar hidden here */}
@@ -303,17 +289,7 @@ const TicketDetails = () => {
 
               {/* Dates */}
               <div className="space-y-3">
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                    Deadline
-                  </h4>
-                  <div className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${new Date(ticket?.deadLine) > new Date() ? 'bg-green-500' : 'bg-red-500'}`} />
-                    <p className="text-lg font-medium text-gray-800 dark:text-white">
-                      {formatDate(ticket?.deadLine)}
-                    </p>
-                  </div>
-                </div>
+                
                 <div>
                   <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Created
@@ -322,24 +298,7 @@ const TicketDetails = () => {
                     {formatDate(ticket?.createdAt)}
                   </p>
                 </div>
-              </div>
-
-              {/* Created By */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Created By
-                </h4>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold">
-                      {ticket?.createdBy?.charAt(0) || '?'}
-                    </span>
-                  </div>
-                  <p className="text-lg font-medium text-gray-800 dark:text-white">
-                    {ticket?.createdBy || 'Unknown'}
-                  </p>
-                </div>
-              </div>
+              </div>              
             </div>
           </div>
         </div>
@@ -350,4 +309,4 @@ const TicketDetails = () => {
 
 
 
-export default TicketDetails;
+export default UserTicketDetails;
