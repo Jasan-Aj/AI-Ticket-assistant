@@ -72,7 +72,7 @@ export const signin = async (req, res)=>{
 
         const token = jwt.sign({userId: user._id, role: user.role});
 
-        return res.status(201).json({
+        return res.status(200).json({
             succes: true,
             message: "user succesfully logged in",
             data:{

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const TicketDetails = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const [isRplyActive, setReplyActive] = useState(false);
 
   const ticket =  {
     title: "Fix login bug",
@@ -40,7 +41,7 @@ const TicketDetails = () => {
       case 'Pending':
         return {
           bg: 'bg-yellow-500/10',
-          text: 'text-yellow-600',
+          text: 'text-yellow-700',
           border: 'border-yellow-500/30',
           glow: 'shadow-[0_0_20px_rgba(234,179,8,0.3)]',
           pulse: 'animate-pulse'
@@ -129,7 +130,7 @@ const TicketDetails = () => {
   const priorityConfig = getPriorityConfig(ticket?.priority);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-6 flex items-center justify-center">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 to-gray-800 p-4 md:p-6 flex items-center justify-center">
       {/* Scrollbar Hide Styles */}
       <style jsx global>{`
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -145,7 +146,7 @@ const TicketDetails = () => {
       
       {/* Main Ticket Container */}
       <div 
-        className={`w-full max-w-4xl h-[90vh] bg-white dark:bg-gray-800 rounded-3xl shadow-2xl transform transition-all duration-500 ${isMounted ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-100'}`}
+        className={`w-full max-w-4xl h-[90vh] bg-gray-800 rounded-3xl shadow-2xl transform transition-all duration-500 ${isMounted ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-100'}`}
         style={{
           // Paper texture effect
           backgroundImage: `
@@ -168,7 +169,7 @@ const TicketDetails = () => {
           {[...Array(20)].map((_, i) => (
             <div 
               key={`left-${i}`}
-              className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+              className="w-4 h-4 rounded-full border border-gray-600 bg-gray-800"
             />
           ))}
         </div>
@@ -177,7 +178,7 @@ const TicketDetails = () => {
           {[...Array(20)].map((_, i) => (
             <div 
               key={`right-${i}`}
-              className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+              className="w-4 h-4 rounded-full border border-gray-600 bg-gray-800"
             />
           ))}
         </div>
@@ -188,7 +189,7 @@ const TicketDetails = () => {
           <div className="flex flex-col md:flex-row md:items-start justify-between mb-8">
             <div className="flex-1 mb-6 md:mb-0">
               <h1 
-                className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 tracking-tight"
+                className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 tracking-tight"
                 aria-label={`Ticket title: ${ticket?.title}`}
               >
                 {ticket?.title || 'Untitled Ticket'}
@@ -228,26 +229,26 @@ const TicketDetails = () => {
           <div className="space-y-8 mb-10">
             {/* Description */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">
+              <h2 className="text-xl font-semibold text-gray-700  border-b pb-2">
                 Description
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+              <p className="text-gray-600  leading-relaxed text-lg">
                 {ticket?.description || 'No description provided.'}
               </p>
             </div>
 
             {/* AI Description (if exists) */}
             {ticket?.aiDescription && (
-              <div className="space-y-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-2xl border border-blue-100 dark:border-blue-800/30">
+              <div className="space-y-4 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 p-6 rounded-2xl border border-blue-800/30">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold">AI</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                  <h3 className="text-lg font-semibold text-gray-700 ">
                     AI Suggestion
                   </h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p className="text-gray-600  leading-relaxed">
                   {ticket.aiDescription}
                 </p>
               </div>
@@ -257,7 +258,7 @@ const TicketDetails = () => {
           {/* Skills Section - Scrollbar hidden here */}
           {ticket?.relatedSkills && ticket.relatedSkills.length > 0 && (
             <div className="mb-10">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
+              <h3 className="text-xl font-semibold text-gray-700 mb-4">
                 Required Skills
               </h3>
               <div 
@@ -289,58 +290,57 @@ const TicketDetails = () => {
           )}
 
           {/* Footer */}
-          <div className="mt-auto pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="mt-auto pt-6 border-t border-gray-700">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Assigned To */}
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <h4 className="text-sm font-semibold text-gray-600  uppercase tracking-wider">
                   Assigned To
                 </h4>
-                <p className="text-lg font-medium text-gray-800 dark:text-white">
+                <p className="text-lg font-medium text-gray-800 ">
                   {ticket?.assignedTo || 'Unassigned'}
                 </p>
               </div>
 
               {/* Dates */}
               <div className="space-y-3">
+                
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                    Deadline
-                  </h4>
-                  <div className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${new Date(ticket?.deadLine) > new Date() ? 'bg-green-500' : 'bg-red-500'}`} />
-                    <p className="text-lg font-medium text-gray-800 dark:text-white">
-                      {formatDate(ticket?.deadLine)}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                  <h4 className="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-1">
                     Created
                   </h4>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-700 ">
                     {formatDate(ticket?.createdAt)}
                   </p>
                 </div>
               </div>
 
-              {/* Created By */}
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Created By
-                </h4>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold">
-                      {ticket?.createdBy?.charAt(0) || '?'}
-                    </span>
-                  </div>
-                  <p className="text-lg font-medium text-gray-800 dark:text-white">
-                    {ticket?.createdBy || 'Unknown'}
-                  </p>
-                </div>
+              <div className="space-y-3">
+                
+                { !isRplyActive && <button className='border border-blue-500 py-2 px-3 rounded-xl bg-blue-200 font-bold text-blue-800 cursor-pointer' onClick={()=> setReplyActive(!isRplyActive)}>
+                  Write Reply
+                </button>}
+
+                { isRplyActive && <div>
+                  <button className='border mr-4 border-red-500 py-2 px-3 rounded-xl bg-red-200 font-bold text-red-800 cursor-pointer' onClick={()=> setReplyActive(!isRplyActive)}>
+                    Cancel
+                  </button>
+
+                  <button className='border border-blue-500 py-2 px-5 rounded-xl bg-blue-200 font-bold text-blue-800 cursor-pointer' onClick={()=> setReplyActive(!isRplyActive)}>
+                    Send
+                  </button>
+                </div>}
               </div>
+              
             </div>
+
+            { isRplyActive && <div className='pt-4'>
+              <form action="">
+                <div>
+                  <textarea className='bg-white border-1 border-gray-500 rounded-lg w-190 h-30' name="" id=""></textarea>
+                </div>
+              </form>
+            </div>}
           </div>
         </div>
       </div>

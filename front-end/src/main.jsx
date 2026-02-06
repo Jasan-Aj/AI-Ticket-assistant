@@ -9,6 +9,7 @@ import Login from "./pages/Login.jsx"
 import Signup from "./pages/Signup.jsx"
 import Admin from "./pages/Admin.jsx"
 import UserTicketDetails from "./pages/UserTicketDetails.jsx"
+import CreateTicket from './pages/CreateTicket.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -28,6 +29,15 @@ createRoot(document.getElementById('root')).render(
           element = {
             <CheckAuth protectedRoute={false}>
               <TicketDetails/>
+            </CheckAuth>
+          }
+        />
+
+        <Route
+          path='/tickets/create'
+          element = {
+            <CheckAuth protectedRoute={false}>
+              <CreateTicket/>
             </CheckAuth>
           }
         />

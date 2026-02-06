@@ -53,9 +53,9 @@ function Signup() {
         });
 
         if(res.ok){
-          const data = res.json;
-          localStorage.setItem("token",data.token);
-          localStorage.setItem("user",JSON.stringify(data.user));
+          const jsonRes = res.json;
+          localStorage.setItem("token",jsonRes.data.token);
+          localStorage.setItem("user",JSON.stringify(jsonRes.data.user));
           setForm({email: "", password:"", confirmPassword:""})
           navigate("/");
         }else{
@@ -72,7 +72,17 @@ function Signup() {
   }
 
   return (
-    <div className='bg-gray-100 w-screen h-screen'>
+    <div className='bg-gray-100 relative w-screen h-screen'>
+
+      {
+            error.state && (
+            <div className='absolute bottom-6 right-6 bg-white shadow-lg border-l-4 border-red-500 rounded-lg px-4 py-4 z-10'>
+                <p className='text-red-900 font-semibold'>
+                {error.message}
+                </p>
+            </div>
+            )
+        }
       <div className='flex justify-center h-screen items-center'>
         <div className='border  border-b-3 border-r-3  rounded-lg'>
           <div className='text-black text-2xl font-semibold text-center py-4'>Sign-up</div>
@@ -101,9 +111,7 @@ function Signup() {
             <Link className='text-blue-800 font-semibold pl-2 cursor-pointer' to={"/login"}>Login</Link>
           </div>
         </div>
-        {
-        error.state && <div className='text-black'>{error.message}</div>
-        }
+        
       </div>
     </div>
   )

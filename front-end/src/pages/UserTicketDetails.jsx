@@ -39,8 +39,8 @@ const UserTicketDetails = () => {
     switch (status) {
       case 'Pending':
         return {
-          bg: 'bg-yellow-500/10',
-          text: 'text-yellow-600',
+          bg: 'bg-yellow-600/10',
+          text: 'text-yellow-700',
           border: 'border-yellow-500/30',
           glow: 'shadow-[0_0_20px_rgba(234,179,8,0.3)]',
           pulse: 'animate-pulse'
@@ -129,7 +129,7 @@ const UserTicketDetails = () => {
   const priorityConfig = getPriorityConfig(ticket?.priority);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4 md:p-6 flex items-center justify-center">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 to-gray-800 p-4 md:p-6 flex items-center justify-center">
       {/* Scrollbar Hide Styles */}
       <style jsx global>{`
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -145,7 +145,7 @@ const UserTicketDetails = () => {
       
       {/* Main Ticket Container */}
       <div 
-        className={`w-full max-w-4xl h-[90vh] bg-white dark:bg-gray-800 rounded-3xl shadow-2xl transform transition-all duration-500 ${isMounted ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-100'}`}
+        className={`w-full max-w-4xl h-[90vh] bg-gray-800 rounded-3xl shadow-2xl transform transition-all duration-500 ${isMounted ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-100'}`}
         style={{
           // Paper texture effect
           backgroundImage: `
@@ -168,7 +168,7 @@ const UserTicketDetails = () => {
           {[...Array(20)].map((_, i) => (
             <div 
               key={`left-${i}`}
-              className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+              className="w-4 h-4 rounded-full border border-gray-600 bg-gray-800"
             />
           ))}
         </div>
@@ -177,7 +177,7 @@ const UserTicketDetails = () => {
           {[...Array(20)].map((_, i) => (
             <div 
               key={`right-${i}`}
-              className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+              className="w-4 h-4 rounded-full border border-gray-600 bg-gray-800"
             />
           ))}
         </div>
@@ -188,7 +188,7 @@ const UserTicketDetails = () => {
           <div className="flex flex-col md:flex-row md:items-start justify-between mb-8">
             <div className="flex-1 mb-6 md:mb-0">
               <h1 
-                className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4 tracking-tight"
+                className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 tracking-tight"
                 aria-label={`Ticket title: ${ticket?.title}`}
               >
                 {ticket?.title || 'Untitled Ticket'}
@@ -228,22 +228,19 @@ const UserTicketDetails = () => {
           <div className="space-y-8 mb-10">
             {/* Description */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">
+              <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
                 Description
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+              <p className="text-gray-600  leading-relaxed text-lg">
                 {ticket?.description || 'No description provided.'}
               </p>
             </div>
-
-            {/* AI Description (if exists) */}
-            
           </div>
 
           {/* Skills Section - Scrollbar hidden here */}
           {ticket?.relatedSkills && ticket.relatedSkills.length > 0 && (
             <div className="mb-10">
-              <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
+              <h3 className="text-xl font-semibold text-gray-600 mb-4">
                 Required Skills
               </h3>
               <div 
@@ -275,14 +272,14 @@ const UserTicketDetails = () => {
           )}
 
           {/* Footer */}
-          <div className="mt-auto pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="pt-6 border-t border-gray-700 ">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Assigned To */}
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                   Assigned To
                 </h4>
-                <p className="text-lg font-medium text-gray-800 dark:text-white">
+                <p className="text-lg font-medium text-gray-700">
                   {ticket?.assignedTo || 'Unassigned'}
                 </p>
               </div>
@@ -291,15 +288,27 @@ const UserTicketDetails = () => {
               <div className="space-y-3">
                 
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                  <h4 className="text-sm font-semibold text-gray-700  uppercase tracking-wider mb-1">
                     Created
                   </h4>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-800">
                     {formatDate(ticket?.createdAt)}
                   </p>
                 </div>
-              </div>              
+              </div>
+                            
             </div>
+
+            { ticket.status === "Completed" && <div className="space-y-8 mt-10 mb-10">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-gray-700">
+                  Solution
+                </h2>
+                <p className="text-gray-600  leading-relaxed text-lg">
+                  {ticket?.description || 'No description provided.'}
+                </p>
+              </div>
+            </div>}
           </div>
         </div>
       </div>

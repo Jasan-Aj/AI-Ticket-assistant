@@ -22,11 +22,7 @@ function Login() {
   const validateInput = ()=>{
     if(form.email == "" || form.password == ""){
       console.log(form.email, form.password, form.confirmPassword);
-      handleError("Fill all required feilds");
-      return false;
-    }
-    else if(form.password.length < 8){
-      handleError("Password requires minimum 8 charecters");
+      handleError("Fill All Required Feilds");
       return false;
     }
     return true;
@@ -48,17 +44,17 @@ function Login() {
         });
 
         if(res.ok){
-          const data = res.json;
-          localStorage.setItem("token",data.token);
-          localStorage.setItem("user",JSON.stringify(data.user));
+          const jsonRes = res.json;
+          localStorage.setItem("token",jsonRes.data.token);
+          localStorage.setItem("user",JSON.stringify(jsonRes.data.user));
           setForm({email: "", password:""})
           navigate("/");
         }else{
-          window.alert("Failed login");
+          handleError("Failed login");
         }
 
       }catch(error){
-        window.alert("Something went Wrong");
+        handleError("Something went Wrong");
       }
       finally{
         setloading(false);
@@ -67,7 +63,16 @@ function Login() {
   }
 
   return (
-    <div className='bg-gray-100 w-screen h-screen'>
+    <div className='bg-gray-100 w-screen h-screen relative'>
+      {
+            error.state && (
+            <div className='absolute bottom-6 right-6 bg-white shadow-lg border-l-4 border-red-500 rounded-lg px-4 py-4 z-10'>
+                <p className='text-red-900 font-semibold'>
+                {error.message}
+                </p>
+            </div>
+            )
+        }
       <div className='flex justify-center h-screen items-center'>
         <div className=' bg-white  border  border-b-3 border-r-3 rounded-lg'>
           <div className='text-black text-2xl font-semibold text-center py-4'>Login</div>
@@ -91,9 +96,7 @@ function Login() {
             <Link className='text-blue-800 font-semibold pl-2 cursor-pointer' to={"/signup"} >Signup</Link>
           </div>
         </div>
-        {
-        error.state && <div className='text-black'>{error.message}</div>
-        }
+       
       </div>
     </div>
   )
