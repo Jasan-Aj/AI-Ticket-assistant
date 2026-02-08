@@ -8,6 +8,14 @@ const TicketDetails = () => {
   const handleSubmit = async (event)=>{
     event.preventDefault();
 
+    try{
+
+    }catch(error){
+      
+    }
+    if(!value.trim() === ""){
+
+    }
   }
 
   const ticket =  {
@@ -332,7 +340,7 @@ const TicketDetails = () => {
                     Cancel
                   </button>
 
-                  <button className='border border-blue-500 py-2 px-5 rounded-xl bg-blue-200 font-bold text-blue-800 cursor-pointer' onClick={()=> setReplyActive(!isRplyActive)}>
+                  <button className='border border-blue-500 py-2 px-5 rounded-xl bg-blue-200 font-bold text-blue-800 cursor-pointer' onClick={()=> handleSubmit}>
                     Send
                   </button>
                 </div>}
@@ -341,9 +349,9 @@ const TicketDetails = () => {
             </div>
 
             { isRplyActive && <div className='pt-4'>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div>
-                  <textarea className='bg-white border-1 border-gray-500 rounded-lg w-190 h-30' name="" id=""></textarea>
+                  <textarea className='bg-white border-1 border-gray-500 rounded-lg w-190 h-30' onChange={(event)=> setValue(event.target.value)}></textarea>
                 </div>
               </form>
             </div>}

@@ -4,6 +4,14 @@ import TicketDetails from '../pages/TicketDetailsPage';
 function ModerateTicketsList({tickets}) {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState({state: false, message: ""});
+
+  const handleError = (message)=>{
+    setError({state:true, message});
+    setTimeout(() => {
+      setError({state:false, message:""})
+    }, 3000);
+  }
   
   const handleTicketClick = (ticket) => {
     setSelectedTicket(ticket);
@@ -38,6 +46,17 @@ function ModerateTicketsList({tickets}) {
   return (
     <div>
     <div className="p-4 md:p-6">
+
+          {
+            error.state && (
+            <div className='absolute bottom-6 right-6 bg-white shadow-lg border-l-4 border-red-500 rounded-lg px-4 py-4 z-10'>
+                <p className='text-red-900 font-semibold'>
+                {error.message}
+                </p>
+            </div>
+            )
+          }
+
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-800">My Tickets</h2>
             </div>
