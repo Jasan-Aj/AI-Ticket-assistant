@@ -62,11 +62,12 @@ export const getTickets = async (req, res)=>{
 export const getTicket = async (req, res)=>{
     const ticketId = req.params.id;
     const user = req.user;
+    let ticket;
     try{
         if(user.role !== "user"){
-            const ticket = await Ticket.findById(ticketId).populate("AssignedTo",["email", "name"]);
+            ticket = await Ticket.findById(ticketId).populate("AssignedTo",["email", "name"]);
         }else{
-            const ticket = await Ticket.findById(ticketId);
+            ticket = await Ticket.findById(ticketId);
         }
 
         if(!ticket){
@@ -76,6 +77,40 @@ export const getTicket = async (req, res)=>{
         }
 
         res.status(200).json(ticket);
+    }catch(error){
+        console.log("Internal server error: ", error);
+        res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}
+
+export const updateTicket = async (req, res)=>{
+    const ticketId = req.params.id;
+    const user = req.uset;
+    const {response} = req.body;
+
+    try{
+        const ticket = await Ticket.findById(ticketId);
+        if(!ticket){
+            res.status(400).json({
+                message: "Ticket does not exist!"
+            });
+        }
+
+        if(!response){
+            res.status(400).json({
+                message: "There is no any response to update!"
+            });
+        }
+
+        await Ticket.findByIdAndUpdate(ticketId,{
+            response,
+            status: "Completed"
+        });
+
+        res.status(200).json({message: "Successfully updated!"});
+
     }catch(error){
         console.log("Internal server error: ", error);
         res.status(500).json({

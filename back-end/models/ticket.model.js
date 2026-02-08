@@ -37,6 +37,12 @@ const ticketSchema = new mongoose.Schema({
     aiDescription: {
         type: String
     },
+    
+    response: {
+        type: String,
+        default: ""
+    }
+    ,
     relatedSkills: {
         type: [String]
     },

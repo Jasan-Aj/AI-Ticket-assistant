@@ -16,7 +16,7 @@ const TicketDetails = ({ticket}) => {
         handleError("Replay cannot be empty!");
       }else{
 
-        await fetch(`${import.meta.env.VITE_URL}/`,{
+        const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/update/${ticket._id}`,{
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -25,12 +25,17 @@ const TicketDetails = ({ticket}) => {
             message: value
           }
         });
-        setReplyActive(false);
-        navigate("/moderator");
+
+        if(res.ok){
+          setReplyActive(false);
+          navigate("/moderator");
+        }else{
+          handleError("Failed to update Ticket!")
+        }
       }
 
     }catch(error){
-      handleError()
+      handleError("Internal server error")
     }
   }
 
