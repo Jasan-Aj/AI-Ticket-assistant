@@ -7,6 +7,7 @@ function Tickets() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({state: false, message: ""});
   const [tickets, setTickets] = useState([]);
+  const token = localStorage.getItem("token");
 
   const handleError = (message)=>{
     setError({state:true, message});
@@ -21,12 +22,12 @@ function Tickets() {
       const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket`,{
         method: "GET",
         headers: {
-          "Content-Type" : "application/json"
+          "Authorization": `Bearer ${token}`
         }
       });
 
       if(res.ok){
-        const ticketsData = await res.json(); // Fixed: added 'await'
+        const ticketsData = await res.json(); 
         setTickets(ticketsData);
         return ticketsData;
       }else{
@@ -65,11 +66,11 @@ function Tickets() {
           <p>{tickets.length}</p>
         </div>
         
-        
         <div className='flex-1 overflow-y-auto pb-4'>
           <div className='flex gap-5 flex-wrap'>
-              <Ticket/>
-              <Ticket/>
+            {
+              tickets.map((ticket)=> <Ticket ticket={ticket} />)
+            }
           </div>
         </div>
       </div>

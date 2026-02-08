@@ -4,6 +4,10 @@ import TicketDetails from '../pages/TicketDetailsPage';
 function ModerateTicketsList({tickets}) {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const assignedTickets = tickets.filter((ticket) => {
+    return ticket.status  !== "Completed"
+  });
   
   const handleTicketClick = (ticket) => {
     setSelectedTicket(ticket);
@@ -54,7 +58,7 @@ function ModerateTicketsList({tickets}) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {tickets.map((ticket) => (
+                  {assignedTickets.map((ticket) => (
                     <tr 
                       key={ticket.id} 
                       className="hover:bg-gray-50 cursor-pointer"

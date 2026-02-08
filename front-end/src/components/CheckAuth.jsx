@@ -15,7 +15,15 @@ function CheckAuth({children, protectedRoute}) {
       }
     }else{
       if(token){
-        navigate("/")
+        if(token.user.role == "admin"){
+          navigate("/admin")
+        }
+        else if(token.user.role == "moderator"){
+          navigate("/admin")
+        }else{
+          navigate("/");
+        }
+        
       }else{
         setLoading(false)
       }

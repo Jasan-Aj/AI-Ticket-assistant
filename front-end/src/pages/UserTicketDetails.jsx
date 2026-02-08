@@ -1,23 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import {useParams} from "react-router-dom"
 
 const UserTicketDetails = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const id = useParams();
+  const token = localStorage.getItem("token");
+  const [ticket, setTicket] = useState({});
+  const [error, setError] = useState({state: false, message: ""});
 
-  const ticket =  {
-    title: "Fix login bug",
-    description: "Users can't login after password reset. The issue appears to be in the authentication middleware where the token validation fails for recently reset passwords. Need to check the JWT verification logic and ensure proper token invalidation during password reset flow.",
-    status: "Pending",
-    createdBy: "John Doe",
-    assignedTo: "Jane Smith",
-    priority: "high",
-    deadLine: new Date("2026-02-10"),
-    aiDescription: "AI suggests checking the auth middleware for JWT validation logic. Consider implementing token blacklisting for reset passwords and adding additional logging to track the authentication flow.",
-    relatedSkills: ["React", "Node.js", "Authentication", "JWT", "Express", "MongoDB", "Redis", "Security"],
-    createdAt: new Date("2026-01-15")
-  };
+  const handleError = (message)=>{
+    setError({state:true, message});
+    setTimeout(() => {
+      setError({state:false, message:""})
+    }, 3000);
+  }
+
+  const fetchTicket = async ()=>{
+    try{
+      const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/${id}`,{
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if(res.ok){
+        const data = await res.json();
+        setTicket(data);
+      }
+
+    }catch(error){
+      handleError("Failed to fetch ticket!")
+    }
+  }
 
   useEffect(() => {
     setIsMounted(true);
+    fetchTicket();
   }, []);
 
   // Helper function to format dates (handles both Date objects and strings)
@@ -142,6 +161,16 @@ const UserTicketDetails = () => {
           scrollbar-width: none;  /* Firefox */
         }
       `}</style>
+
+      {
+            error.state && (
+            <div className='absolute bottom-6 right-6 bg-white shadow-lg border-l-4 border-red-500 rounded-lg px-4 py-4 z-10'>
+                <p className='text-red-900 font-semibold'>
+                {error.message}
+                </p>
+            </div>
+            )
+        }
       
       {/* Main Ticket Container */}
       <div 

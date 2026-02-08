@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function Ticket({navigatTo}) {
+function Ticket({ticket}) {
     
   return (
-    <Link className='bg-amber-300 border border-l-0 border-r-3 border-b-3 border-t-0 w-70 rounded-xl text-lg p-2' to={"/usertickets/1"} >
+    <Link className='bg-amber-300 border border-l-0 border-r-3 border-b-3 border-t-0 w-70 rounded-xl text-lg p-2' to={"/usertickets/" + ticket._id} >
         <div className='border-2 border-gray-500 w-full h-full rounded-lg'>
             <div>
                 <p className='px-3 py-2 font-semibold'>Title</p>
