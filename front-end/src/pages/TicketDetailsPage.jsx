@@ -3,6 +3,12 @@ import React, { useState, useEffect } from 'react';
 const TicketDetails = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isRplyActive, setReplyActive] = useState(false);
+  const [value, setValue] = useState(""); 
+
+  const handleSubmit = async (event)=>{
+    event.preventDefault();
+
+  }
 
   const ticket =  {
     title: "Fix login bug",
@@ -335,7 +341,7 @@ const TicketDetails = () => {
             </div>
 
             { isRplyActive && <div className='pt-4'>
-              <form action="">
+              <form>
                 <div>
                   <textarea className='bg-white border-1 border-gray-500 rounded-lg w-190 h-30' name="" id=""></textarea>
                 </div>

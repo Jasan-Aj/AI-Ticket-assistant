@@ -5,6 +5,6 @@ import { getUsers, updateUser } from "../controllers/user.controller.js";
 const router = Router();
 
 router.get("/",authenticate, getUsers);
-router.post("/",authenticate, updateUser);
+router.post("/update",authenticate, updateUser);
 
 export default router;

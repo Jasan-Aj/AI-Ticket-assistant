@@ -10,6 +10,7 @@ import Signup from "./pages/Signup.jsx"
 import Admin from "./pages/Admin.jsx"
 import UserTicketDetails from "./pages/UserTicketDetails.jsx"
 import CreateTicket from './pages/CreateTicket.jsx'
+import Moderator from './pages/Moderator.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -74,6 +75,15 @@ createRoot(document.getElementById('root')).render(
           element = {
             <CheckAuth protectedRoute={false}>
               <Admin/>
+            </CheckAuth>
+          }
+        />
+
+        <Route
+          path='/moderator'
+          element = {
+            <CheckAuth protectedRoute={false}>
+              <Moderator/>
             </CheckAuth>
           }
         />
