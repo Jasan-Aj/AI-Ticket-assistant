@@ -113,7 +113,6 @@ function ModerateTicketsList({tickets}) {
                 <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
                   <TicketDetails 
                     ticket={selectedTicket}
-                    onClose={closeModal}
                   />
                 </div>
               </div>

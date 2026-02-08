@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {useNavigate} from "react-router-dom"
 
-const TicketDetails = () => {
+const TicketDetails = ({ticket}) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isRplyActive, setReplyActive] = useState(false);
   const [value, setValue] = useState(""); 
