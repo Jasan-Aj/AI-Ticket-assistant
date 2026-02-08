@@ -1,21 +1,44 @@
 import React, { useState, useEffect } from 'react';
+import {useNavigate} from "react-router-dom"
 
 const TicketDetails = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isRplyActive, setReplyActive] = useState(false);
   const [value, setValue] = useState(""); 
+  const [error, setError] = useState({state: false, message: ""});
+  const navigate = useNavigate();
 
   const handleSubmit = async (event)=>{
     event.preventDefault();
 
     try{
+      if(value.trim() === ""){
+        handleError("Replay cannot be empty!");
+      }else{
+
+        await fetch(`${import.meta.env.VITE_URL}/`,{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: {
+            message: value
+          }
+        });
+        setReplyActive(false);
+        navigate("/moderator");
+      }
 
     }catch(error){
-      
+      handleError()
     }
-    if(!value.trim() === ""){
+  }
 
-    }
+  const handleError = (message)=>{
+    setError({state:true, message});
+    setTimeout(() => {
+      setError({state:false, message:""})
+    }, 3000);
   }
 
   const ticket =  {
@@ -157,6 +180,16 @@ const TicketDetails = () => {
           scrollbar-width: none;  /* Firefox */
         }
       `}</style>
+
+      {
+            error.state && (
+            <div className='absolute bottom-6 right-6 bg-white shadow-lg border-l-4 border-red-500 rounded-lg px-4 py-4 z-10'>
+                <p className='text-red-900 font-semibold'>
+                {error.message}
+                </p>
+            </div>
+            )
+          }
       
       {/* Main Ticket Container */}
       <div 
