@@ -32,7 +32,6 @@ function Tickets() {
         return ticketsData;
       }else{
         handleError("Failed to fetch tickets!");
-        return null;
       }
     }catch(error){
       handleError("Failed to fetch tickets!");

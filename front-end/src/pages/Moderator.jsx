@@ -4,12 +4,39 @@ import { useState } from 'react';
 
 function Moderator() {
 
-    const [tickets, setTickets] = useState([
-        { id: "1", title: 'Login Issue', status: 'Open', priority: 'High', createdAt: '2024-01-15', assignedTo: 'John Doe' },
-        { id: "2", title: 'Payment Failed', status: 'In Progress', priority: 'Medium', createdAt: '2024-01-14', assignedTo: 'Jane Smith' },
-        { id: "3", title: 'Feature Request', status: 'Closed', priority: 'Low', createdAt: '2024-01-13', assignedTo: 'Mike Johnson' },
-        { id: "4", title: 'Bug Report', status: 'Open', priority: 'High', createdAt: '2024-01-12', assignedTo: 'Sarah Wilson' },
-    ]);
+  const user = localStorage.getItem("user");
+  const email = user.email;
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchTickets = async ()=>{
+      setLoading(true);
+      try{
+        const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/moderate`,{
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+  
+        if(res.ok){
+          const ticketsData = await res.json(); 
+          setTickets(ticketsData);
+          return ticketsData;
+        }else{
+          handleError("Failed to fetch tickets!");
+          return null;
+        }
+      }catch(error){
+        handleError("Failed to fetch tickets!");
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    useEffect(() => {
+      fetchTickets();
+    }, []);
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 p-4 md:p-6 overflow-hidden">

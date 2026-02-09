@@ -3,26 +3,75 @@ import TicketDetails from './TicketDetailsPage';
 import ModerateTicketsList from '../components/ModerateTicketsList';
 
 const Admin = () => {
-  const [activeTab, setActiveTab] = useState('tickets');
-  const [form, setForm] = useState({role: "", skills: ""});
-  const [error, setError] = useState({state: false, message: ""});
 
-  const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+    const token = localStorage.getItem("token");
+
+    const [tickets, setTickets] = useState([]);
+    const [users, setUsers] = useState([]);
+
+    const [loading, setLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState('tickets');
+
+    const [form, setForm] = useState({role: "", skills: ""});
+    const [error, setError] = useState({state: false, message: ""});
+
+    const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
   
-  const [tickets, setTickets] = useState([
-    { id: "1", title: 'Login Issue', status: 'Open', priority: 'High', createdAt: '2024-01-15', assignedTo: 'John Doe' },
-    { id: "2", title: 'Payment Failed', status: 'In Progress', priority: 'Medium', createdAt: '2024-01-14', assignedTo: 'Jane Smith' },
-    { id: "3", title: 'Feature Request', status: 'Closed', priority: 'Low', createdAt: '2024-01-13', assignedTo: 'Mike Johnson' },
-    { id: "4", title: 'Bug Report', status: 'Open', priority: 'High', createdAt: '2024-01-12', assignedTo: 'Sarah Wilson' },
-  ]);
+    const fetchTickets = async ()=>{
+        setLoading(true);
+        try{
+          const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/moderate`,{
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          });
+    
+          if(res.ok){
+            const ticketsData = await res.json(); 
+            setTickets(ticketsData);
+            return ticketsData;
+          }else{
+            handleError("Failed to fetch tickets!");
+            return null;
+          }
+        }catch(error){
+          handleError("Failed to fetch tickets!");
+        } finally {
+          setLoading(false);
+        }
+    }
 
-  const [users, setUsers] = useState([
-    { id: "1", name: 'John Doe', email: 'john@example.com', role: 'Admin', tickets: 12, joined: '2023-11-10' },
-    { id: "2", name: 'Jane Smith', email: 'jane@example.com', role: 'Moderator', tickets: 8, joined: '2023-12-05' },
-    { id: "3", name: 'Mike Johnson', email: 'mike@example.com', role: 'User', tickets: 5, joined: '2024-01-02' },
-    { id: "4", name: 'Sarah Wilson', email: 'sarah@example.com', role: 'Moderator', tickets: 15, joined: '2023-10-20' },
-  ]);
+    const fetchUsers = async ()=>{
+        setLoading(true);
+        try{
+          const res = await fetch(`${import.meta.env.VITE_URL}/api/users`,{
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          });
+    
+          if(res.ok){
+            const userData = await res.json(); 
+            setUsers(userData);
+            return userData;
+          }else{
+            handleError("Failed to fetch users!");
+            return null;
+          }
+        }catch(error){
+          handleError("Failed to fetch users!");
+        } finally {
+          setLoading(false);
+        }
+    }
+    
+      useEffect(() => {
+        fetchTickets();
+        fetchUsers();
+      }, []);
 
   const handleError = (message)=>{
     setError({state:true, message});
@@ -60,26 +109,32 @@ const Admin = () => {
       }
       
       if(form.skills.trim() !== ""){
-        skills = form.skills.split(" ");
+        skills = form.skills.split(" ").map((skill)=> skill.trim());
       }
 
       if(form.role.trim() !== ""){
         role = form.role;
       }
 
-      await fetch(`${import.meta.env.VITE_URL}/users/update`,{
+      const res = await fetch(`${import.meta.env.VITE_URL}/api/users/update`,{
         method: "POST",
         headers: {
+          "Authorization" : `Bearer ${token}`,
           "Content-Type" : "application/json"
         },
-        body:{
+        body: JSON.stringify({
           email: selectedUser.email,
           skills,
           role
-        }
+        })
       });
 
-      closeUpdateForm();
+      if(res.ok){
+        closeUpdateForm();
+        fetchUsers();
+      }else{
+        handleError("Failed to update user!");
+      }
 
     }catch(error){
       handleError("Failed to update user!");

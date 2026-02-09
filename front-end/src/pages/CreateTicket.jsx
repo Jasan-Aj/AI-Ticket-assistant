@@ -11,6 +11,7 @@ const CreateTicket = () => {
   const [error, setError] = useState({state:false, message:""});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,9 +65,10 @@ const CreateTicket = () => {
     if (isNoErrors) {
 
         try{
-            const res = await fetch(`${import.meta.env.VITE_URL}/tickets`, {
+            const res = await fetch(`${import.meta.env.VITE_URL}/api/tickets`, {
                 method : "POST",
                 headers: {
+                    "Authorization" : `Bearer ${token}`,
                     "Content-type" : "application/json"
                 },
                 body: JSON.stringify(formData)
@@ -79,10 +81,12 @@ const CreateTicket = () => {
                     setFormData({ title: '', description: '' });
                     navigate("/");
                 }, 2000);
+            }else{
+              handleError("Failed to create new ticket");
             }
 
         }catch(error){
-            handleError("Failed to create new ticket")
+            handleError("Failed to create new ticket");
         }finally{
             setLoading(false);
         }

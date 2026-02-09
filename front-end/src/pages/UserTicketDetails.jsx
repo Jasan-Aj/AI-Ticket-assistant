@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom"
 
 const UserTicketDetails = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const id = useParams();
+  const id = useParams().toString();
   const token = localStorage.getItem("token");
   const [ticket, setTicket] = useState({});
   const [error, setError] = useState({state: false, message: ""});
@@ -27,10 +27,12 @@ const UserTicketDetails = () => {
       if(res.ok){
         const data = await res.json();
         setTicket(data);
+      }else{
+        handleError("Failed to fetch ticket!");
       }
 
     }catch(error){
-      handleError("Failed to fetch ticket!")
+      handleError("Failed to fetch ticket!");
     }
   }
 

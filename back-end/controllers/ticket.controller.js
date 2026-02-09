@@ -43,7 +43,11 @@ export const getTickets = async (req, res)=>{
         let tickets = [];
         if(user.role !== "user"){
             tickets = await Ticket.find().populate("AssignedTo",["email","name"]).sort({createdAt: -1});
-        }else{
+        }
+        else if(user.role === "moderator"){
+            tickets = await Ticket.find({ assignedTo: user._id });
+        }
+        else{
             tickets = (await Ticket.find()).filter({
                 createdBy: user._id.toString()
             }).sort({
@@ -115,6 +119,48 @@ export const updateTicket = async (req, res)=>{
         console.log("Internal server error: ", error);
         res.status(500).json({
             message: "Internal server error"
+        });
+    }
+}
+
+export const getModerateTickets = async (req, res)=>{
+    try{
+        const user = req.user;
+        let tickets = [];
+        
+        tickets = await Ticket.find({ assignedTo: user._id });
+
+        return res.status(200).json(tickets);
+
+    }catch(error){
+        return res.status(500).json({
+            message: "Internal sserver error"
+        });
+    }
+}
+
+const deleteTicket = async (req, res)=>{
+    const user = req.user;
+    const ticketId = req.params.id;
+
+    try{
+        if(user.role !== "admin"){
+            res.status(401).json({message: "Not authorized"});
+        }
+
+        const ticket = await Ticket.findById(ticketId);
+        if(!ticket){
+            res.status(404).json({
+                message: "Ticket does not found!"
+            });
+        }
+
+        await Ticket.findByIdAndDelete(ticketId);
+        res.json(200).json({message: "Successfully deleted"});
+
+    }catch(error){
+        res.status(500).json({
+            message: "Internal server error!"
         });
     }
 }

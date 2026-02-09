@@ -21,9 +21,9 @@ const TicketDetails = ({ticket}) => {
           headers: {
             "Content-Type": "application/json"
           },
-          body: {
-            message: value
-          }
+          body: JSON.stringify({
+            response: value
+          })
         });
 
         if(res.ok){
@@ -35,7 +35,7 @@ const TicketDetails = ({ticket}) => {
       }
 
     }catch(error){
-      handleError("Internal server error")
+      handleError("Internal server error");
     }
   }
 
@@ -45,19 +45,6 @@ const TicketDetails = ({ticket}) => {
       setError({state:false, message:""})
     }, 3000);
   }
-
-  const ticket =  {
-    title: "Fix login bug",
-    description: "Users can't login after password reset. The issue appears to be in the authentication middleware where the token validation fails for recently reset passwords. Need to check the JWT verification logic and ensure proper token invalidation during password reset flow.",
-    status: "Pending",
-    createdBy: "John Doe",
-    assignedTo: "Jane Smith",
-    priority: "high",
-    deadLine: new Date("2026-02-10"),
-    aiDescription: "AI suggests checking the auth middleware for JWT validation logic. Consider implementing token blacklisting for reset passwords and adding additional logging to track the authentication flow.",
-    relatedSkills: ["React", "Node.js", "Authentication", "JWT", "Express", "MongoDB", "Redis", "Security"],
-    createdAt: new Date("2026-01-15")
-  };
 
   useEffect(() => {
     setIsMounted(true);
