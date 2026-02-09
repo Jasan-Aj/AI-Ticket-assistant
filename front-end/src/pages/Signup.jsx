@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 function Signup() {
 
-  const [form, setForm] = useState({email:"", password:"", confirmPassword:"", username:""});
+  const [form, setForm] = useState({email:"", password:"", confirmPassword:"", name:""});
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState({state: false, message: ""});
@@ -20,7 +20,7 @@ function Signup() {
   }
 
   const validateInput = ()=>{
-    if(form.email == "" || form.password == "" || form.confirmPassword =="" || form.username == ""){
+    if(form.email == "" || form.password == "" || form.confirmPassword =="" || form.name == ""){
       console.log(form.email, form.password, form.confirmPassword);
       handleError("Fill all required feilds");
       return false;
@@ -55,7 +55,7 @@ function Signup() {
           const jsonRes = res.json;
           localStorage.setItem("token",jsonRes.data.token);
           localStorage.setItem("user",JSON.stringify(jsonRes.data.user));
-          setForm({email: "", password:"", confirmPassword:"", username:""})
+          setForm({email: "", password:"", confirmPassword:"", name:""})
           navigate("/");
         }else{
           window.alert("Failed login");
@@ -93,7 +93,7 @@ function Signup() {
 
             <div className='px-4 pt-4 flex flex-col'>
               <label htmlFor="" className='text-black text-md'>Username</label>
-              <input className='border-2 border-gray-500 rounded p-1 sm:w-sm text-black' onChange={(e)=>handleChange(e)} name='username' type="text"/>
+              <input className='border-2 border-gray-500 rounded p-1 sm:w-sm text-black' onChange={(e)=>handleChange(e)} name='name' type="text"/>
             </div>
 
             <div className='px-4 pt-4 flex flex-col'>

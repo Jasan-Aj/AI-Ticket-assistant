@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 function Navbar({title}) {
     const [isActive, setActive] = useState(false); 
+    const user = localStorage.getItem("user");
 
     return (
         <nav className='mx-4 my-2'>
@@ -16,7 +17,7 @@ function Navbar({title}) {
                         >
                             J
                         </div>
-                        <p className='text-white ml-2'>Username</p>
+                        <p className='text-white ml-2'>{user.name}</p>
                         
                         {/* Dropdown Menu */}
                         {isActive && (
