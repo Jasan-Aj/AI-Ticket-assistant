@@ -73,6 +73,26 @@ const Admin = () => {
         fetchUsers();
       }, []);
 
+  const handleDelete = async(ticket)=>{
+    try{
+      const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/delete/${ticket._id}`,{
+        method : "DELETE",
+        body: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if(res.ok){
+        fetchTickets();
+      }else{
+        handleError("Failed to delete ticket")
+      }
+
+    }catch(error){
+      handleError("Internal server error!");
+    }
+  }
+
   const handleError = (message)=>{
     setError({state:true, message});
     setTimeout(() => {
@@ -261,7 +281,7 @@ const Admin = () => {
                       <td className="px-4 py-3 text-sm text-gray-500">{ticket.assignedTo}</td>
                       <td className="px-4 py-3 text-sm text-gray-500">{ticket.createdAt}</td>
                       <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-                        <button className="text-red-600 hover:text-red-800 text-sm font-medium cursor-pointer">
+                        <button className="text-red-600 hover:text-red-800 text-sm font-medium cursor-pointer" onClick={()=> handleDelete(ticket)}>
                           Delete
                         </button>
                       </td>
