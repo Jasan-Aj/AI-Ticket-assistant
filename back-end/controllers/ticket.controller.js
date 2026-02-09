@@ -17,12 +17,12 @@ export const createTicket = async(req, res)=>{
             createdBy: req.user._id.toString()
         });
 
-        await inngest.run({
-            name: "user/on-ticket-create",
-            data: {
-                ticketId: newTicket._id.toString()
-            }
-        })
+        // await inngest.run({
+        //     name: "user/on-ticket-create",
+        //     data: {
+        //         ticketId: newTicket._id.toString()
+        //     }
+        // })
 
         return res.status(201).json({
             message: "Ticket created successfully",

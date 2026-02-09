@@ -136,7 +136,7 @@ const Admin = () => {
         role = form.role;
       }
 
-      const res = await fetch(`${import.meta.env.VITE_URL}/api/users/update`,{
+      const res = await fetch(`${import.meta.env.VITE_URL}/users/update`,{
         method: "POST",
         headers: {
           "Authorization" : `Bearer ${token}`,

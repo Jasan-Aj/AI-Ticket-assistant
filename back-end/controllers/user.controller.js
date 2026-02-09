@@ -28,10 +28,10 @@ export const signup = async (req, res)=>{
         await session.commitTransaction();
         session.endSession();
 
-        await inngest.run({
-            name: "user/sign-up",
-            data: {email}
-        });
+        // await inngest.run({
+        //     name: "user/sign-up",
+        //     data: {email}
+        // });
 
         return res.status(201).json({
             succes: true,
