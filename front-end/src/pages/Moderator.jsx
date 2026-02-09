@@ -12,7 +12,7 @@ function Moderator() {
   const fetchTickets = async ()=>{
       setLoading(true);
       try{
-        const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/moderate`,{
+        const res = await fetch(`${import.meta.env.VITE_URL}/ticket/moderate`,{
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`

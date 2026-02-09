@@ -19,7 +19,7 @@ function Tickets() {
   const fetchTickets = async ()=>{
     setLoading(true);
     try{
-      const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket`,{
+      const res = await fetch(`${import.meta.env.VITE_URL}/ticket`,{
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`

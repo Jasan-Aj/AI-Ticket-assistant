@@ -65,7 +65,7 @@ const CreateTicket = () => {
     if (isNoErrors) {
 
         try{
-            const res = await fetch(`${import.meta.env.VITE_URL}/api/tickets`, {
+            const res = await fetch(`${import.meta.env.VITE_URL}/tickets`, {
                 method : "POST",
                 headers: {
                     "Authorization" : `Bearer ${token}`,

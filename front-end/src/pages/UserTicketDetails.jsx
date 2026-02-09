@@ -17,7 +17,7 @@ const UserTicketDetails = () => {
 
   const fetchTicket = async ()=>{
     try{
-      const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/${id}`,{
+      const res = await fetch(`${import.meta.env.VITE_URL}/ticket/${id}`,{
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`

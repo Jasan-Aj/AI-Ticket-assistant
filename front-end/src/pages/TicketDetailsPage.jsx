@@ -16,7 +16,7 @@ const TicketDetails = ({ticket}) => {
         handleError("Replay cannot be empty!");
       }else{
 
-        const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/update/${ticket._id}`,{
+        const res = await fetch(`${import.meta.env.VITE_URL}/ticket/update/${ticket._id}`,{
           method: "POST",
           headers: {
             "Content-Type": "application/json"

@@ -21,7 +21,7 @@ const Admin = () => {
     const fetchTickets = async ()=>{
         setLoading(true);
         try{
-          const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/moderate`,{
+          const res = await fetch(`${import.meta.env.VITE_URL}/ticket/moderate`,{
             method: "GET",
             headers: {
               "Authorization": `Bearer ${token}`
@@ -46,7 +46,7 @@ const Admin = () => {
     const fetchUsers = async ()=>{
         setLoading(true);
         try{
-          const res = await fetch(`${import.meta.env.VITE_URL}/api/users`,{
+          const res = await fetch(`${import.meta.env.VITE_URL}/users`,{
             method: "GET",
             headers: {
               "Authorization": `Bearer ${token}`
@@ -75,7 +75,7 @@ const Admin = () => {
 
   const handleDelete = async(ticket)=>{
     try{
-      const res = await fetch(`${import.meta.env.VITE_URL}/api/ticket/delete/${ticket._id}`,{
+      const res = await fetch(`${import.meta.env.VITE_URL}/ticket/delete/${ticket._id}`,{
         method : "DELETE",
         body: {
           "Authorization": `Bearer ${token}`
