@@ -73,7 +73,7 @@ createRoot(document.getElementById('root')).render(
         <Route
           path='/admin'
           element = {
-            <CheckAuth protectedRoute={true}>
+            <CheckAuth protectedRoute={false}>
               <Admin/>
             </CheckAuth>
           }
@@ -82,7 +82,7 @@ createRoot(document.getElementById('root')).render(
         <Route
           path='/moderator'
           element = {
-            <CheckAuth protectedRoute={true}>
+            <CheckAuth protectedRoute={false}>
               <Moderator/>
             </CheckAuth>
           }
