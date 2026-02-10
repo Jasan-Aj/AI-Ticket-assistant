@@ -126,15 +126,25 @@ export const updateUser = async (req, res)=>{
         }
 
         const {email, skills= [], role} = req.body;
-        const user = await User.findOne(email);
+        const user = await User.findOne({email});
         if(!user){
             throw new Error("user does not exist!");
         }
 
-        await User.updateOne(
-            {email},
-            {skills: skills.lenght ? skills : user.skills, role:  role ? role: user.role}
-        );
+        const updatedUser = await User.findOneAndUpdate(
+        { email },
+        { 
+            skills: skills.length ? skills : user.skills, 
+            role: role ? role : user.role 
+        },
+        { new: true }
+        ).select("-password");
+
+        return res.status(200).json({
+        success: true,
+        message: "User successfully updated!",
+        data: { user: updatedUser }
+        });
 
         // await session.commitTransaction();
         // session.endSession();

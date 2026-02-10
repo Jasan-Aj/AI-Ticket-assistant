@@ -8,28 +8,27 @@ function Navbar({title, handleError}) {
     const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
-    const handleLogout = async()=>{
-        try{
-            const res = await fetch(`${import.meta.env.VITE_URL}/auth/sign-out`,{
-                method: "POST",
-                headers:{
-                    "Authorization" : `Bearer ${token}`
-                }
-            });
-
-            if(res.ok){
-                navigate("/");
-            }else{
-                console.log(res);
-                handleError("Failed to logout!")
-            }
-
-        }catch(error){
-            handleError("Failed logout!")
-        }finally{
-            setActive(false);
+    const handleLogout = async ()=>{
+    try{
+      const res = await fetch(`${import.meta.env.VITE_URL}/auth/sign-out`,{
+        method: "DELETE",
+        headers: {
+          "Authorization" : `Bearer ${token}`
         }
+      });
+
+      if(res.ok){
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/");
+      }else{
+        handleError("Failed logout user!");
+      }
+
+    }catch(error){
+      handleError("Internal server error!")
     }
+  }
 
     return (
         <nav className='mx-4 my-4'>

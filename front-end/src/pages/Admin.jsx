@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ModerateTicketsList from '../components/ModerateTicketsList';
+import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const navigate = useNavigate();
 
   const [tickets, setTickets] = useState([]);
   const [moderationtickets, setModerationTickets] = useState([]);
@@ -28,10 +31,8 @@ const Admin = () => {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}` }
       });
-      
       if (res.ok) {
         const ticketsData = await res.json();
-        // Ensure we are setting an array
         setTickets(Array.isArray(ticketsData) ? ticketsData : []);
       }
     } catch (err) {
@@ -47,7 +48,6 @@ const Admin = () => {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}` }
       });
-      
       if (res.ok) {
         const ticketsData = await res.json();
         setModerationTickets(Array.isArray(ticketsData) ? ticketsData : []);
@@ -65,10 +65,9 @@ const Admin = () => {
       });
       if (res.ok) {
         const userData = await res.json();
-        console.log(userData);
         setUsers(Array.isArray(userData) ? userData : []);
       } else {
-        setUsers([]); // Reset to empty array on error
+        setUsers([]);
       }
     } catch (err) {
       handleError("Failed to fetch users!");
@@ -97,6 +96,28 @@ const Admin = () => {
       handleError("Error!");
     }
   };
+
+  const handleLogout = async ()=>{
+    try{
+      const res = await fetch(`${import.meta.env.VITE_URL}/auth/sign-out`,{
+        method: "DELETE",
+        headers: {
+          "Authorization" : `Bearer ${token}`
+        }
+      });
+
+      if(res.ok){
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/");
+      }else{
+        handleError("Failed logout user!");
+      }
+
+    }catch(error){
+      handleError("Internal server error!")
+    }
+  }
 
   const openUpdateModal = (user) => {
     setSelectedUser(user);
@@ -140,52 +161,69 @@ const Admin = () => {
 
   const getStatusColor = (s = "") => {
     const status = s.toLowerCase();
-    if (status === 'open') return 'bg-rose-50 text-rose-600 border-rose-100';
-    if (status === 'in progress') return 'bg-amber-50 text-amber-600 border-amber-100';
-    return 'bg-emerald-50 text-emerald-600 border-emerald-100';
+    if (status === 'open') return 'bg-rose-400';
+    if (status === 'in progress') return 'bg-amber-400';
+    return 'bg-emerald-400';
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa] p-4 md:p-8 font-sans text-slate-800">
+    <div className="min-h-screen bg-[#FDFCF0] p-4 md:p-8 font-sans text-black">
+      {/* Error Toast */}
       {error.state && (
-        <div className='fixed bottom-10 right-10 bg-white shadow-2xl border-l-4 border-rose-500 rounded-xl px-6 py-4 z-[110] animate-in fade-in slide-in-from-bottom-4 duration-300'>
-          <p className='text-slate-800 font-bold text-sm'>{error.message}</p>
+        <div className='fixed bottom-10 right-10 bg-rose-400 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-6 py-4 z-[110] animate-bounce'>
+          <p className='font-black text-sm uppercase italic'>{error.message}</p>
         </div>
       )}
 
-      <div className="max-w-6xl mx-auto mb-10 flex justify-between items-end">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900">Dashboard</h1>
-          <p className="text-slate-500 font-medium text-sm">System Management</p>
+      {/* Header */}
+      <div className="max-w-6xl mx-auto mb-10 flex justify-between items-center">
+        <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-1">
+          <h1 className="text-4xl font-black uppercase italic leading-none">Admin Panel</h1>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] mt-1 text-indigo-600">Secure Access Restricted</p>
         </div>
         
-        <div className='relative'>
-          <button 
-            className='w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center font-bold text-white cursor-pointer shadow-lg shadow-indigo-200 hover:scale-105 transition-transform'
-            onClick={() => setActive(!isActive)}
-          >
-            {user.name ? user.name[0].toUpperCase() : 'A'}
-          </button>
-          {isActive && (
-            <div className='absolute top-14 right-0 bg-white shadow-2xl rounded-2xl py-2 min-w-[160px] z-50 border border-slate-100'>
-              <button className='w-full text-left px-4 py-3 text-rose-500 font-bold text-sm hover:bg-rose-50 transition-colors' onClick={() => { localStorage.clear(); window.location.reload(); }}>
-                Sign Out
-              </button>
-            </div>
-          )}
+        <div className='flex items-center gap-4'>
+          {/* Username Label - Added Styling Here */}
+          <div className="hidden md:block text-right">
+            <p className="text-[10px] font-black uppercase tracking-tighter leading-none mb-1 text-slate-500">Authorized Personnel</p>
+            <p className="text-sm font-black uppercase italic border-b-2 border-black inline-block">{user.name || 'Anonymous'}</p>
+          </div>
+
+          <div className='relative'>
+            <button 
+              className='w-14 h-14 border-4 border-black bg-yellow-400 flex items-center justify-center font-black text-2xl cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all'
+              onClick={() => setActive(!isActive)}
+            >
+              {user.name ? user.name[0].toUpperCase() : 'A'}
+            </button>
+
+            {isActive && (
+              <div className='absolute top-16 right-0 bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] py-2 min-w-[160px] z-50'>
+                {/* Mobile view username inside dropdown */}
+                <div className="md:hidden px-4 py-2 border-b-2 border-black bg-slate-50">
+                  <p className="text-[8px] font-black uppercase text-slate-400">User</p>
+                  <p className="text-xs font-black uppercase">{user.name}</p>
+                </div>
+                <button className='w-full text-left px-4 py-3 text-black font-black text-xs uppercase hover:bg-rose-400 transition-colors cursor-pointer' onClick={() => handleLogout()}>
+                  Sign Out →
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto">
-        <div className="flex gap-2 mb-8 bg-slate-200/50 p-1.5 rounded-2xl w-fit">
+        {/* Tabs */}
+        <div className="flex flex-wrap gap-4 mb-10">
           {['tickets', 'users', 'moderation'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+              className={`px-8 py-3 border-4 border-black font-black uppercase italic tracking-wider transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 ${
                 activeTab === tab 
-                  ? 'bg-white text-indigo-600 shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'bg-indigo-500 text-white translate-x-1 translate-y-1 shadow-none' 
+                  : 'bg-white hover:bg-yellow-200'
               }`}
             >
               {tab}
@@ -193,34 +231,37 @@ const Admin = () => {
           ))}
         </div>
 
-        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
+        {/* Content Area */}
+        <div className="bg-white border-4 border-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] overflow-hidden min-h-[500px]">
           {loading ? (
-            <div className="flex items-center justify-center h-[400px] text-slate-400 font-bold animate-pulse">Loading data...</div>
+            <div className="flex items-center justify-center h-[400px]">
+               <div className="font-black text-3xl uppercase italic animate-pulse">Loading...</div>
+            </div>
           ) : (
-            <>
+            <div className="p-6">
               {activeTab === 'tickets' && (
-                <div className="p-4 overflow-x-auto">
+                <div className="overflow-x-auto">
                   {tickets.length > 0 ? (
-                    <table className="w-full">
+                    <table className="w-full border-collapse">
                       <thead>
-                        <tr className="text-left">
-                          <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Title</th>
-                          <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
-                          <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Action</th>
+                        <tr className="border-b-4 border-black">
+                          <th className="px-6 py-5 text-left text-xs font-black uppercase italic tracking-widest bg-blue-100 border-r-4 border-black">Title</th>
+                          <th className="px-6 py-5 text-left text-xs font-black uppercase italic tracking-widest bg-pink-100 border-r-4 border-black">Status</th>
+                          <th className="px-6 py-5 text-right text-xs font-black uppercase italic tracking-widest bg-yellow-100">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-50">
+                      <tbody>
                         {tickets.map((ticket) => (
-                          <tr key={ticket._id} className="group hover:bg-slate-50/50 transition-colors">
-                            <td className="px-6 py-5 font-bold text-slate-700">{ticket.title}</td>
-                            <td className="px-6 py-5">
-                              <span className={`px-3 py-1 rounded-lg text-[10px] font-black border uppercase ${getStatusColor(ticket.status)}`}>
+                          <tr key={ticket._id} className="border-b-4 border-black hover:bg-slate-50 transition-colors">
+                            <td className="px-6 py-5 font-black text-lg border-r-4 border-black">{ticket.title}</td>
+                            <td className="px-6 py-5 border-r-4 border-black">
+                              <span className={`px-4 py-1 border-2 border-black font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${getStatusColor(ticket.status)}`}>
                                 {ticket.status}
                               </span>
                             </td>
                             <td className="px-6 py-5 text-right">
-                              <button onClick={() => handleDelete(ticket)} className="text-rose-400 hover:text-rose-600 font-black text-[10px] uppercase tracking-widest">
-                                Delete
+                              <button onClick={() => handleDelete(ticket)} className="bg-white border-2 border-black px-4 py-1 font-black text-[10px] uppercase hover:bg-rose-500 hover:text-white transition-all">
+                                Delete [X]
                               </button>
                             </td>
                           </tr>
@@ -228,78 +269,78 @@ const Admin = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-[350px] text-slate-400">
-                      <p className="font-black uppercase tracking-widest text-xs">No tickets found</p>
-                      <p className="text-[10px] mt-2">Active support tickets will appear here.</p>
+                    <div className="flex flex-col items-center justify-center h-[350px] border-4 border-dashed border-black m-4">
+                      <p className="font-black uppercase italic text-2xl">Null Set</p>
+                      <p className="text-[12px] font-bold mt-2">No tickets currently exist in the database.</p>
                     </div>
                   )}
                 </div>
               )}
 
               {activeTab === 'users' && (
-                <div className="p-8">
+                <div>
                   {users.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {users.map((u) => (
-                        <div key={u._id} className="p-6 rounded-[2rem] border border-slate-100 bg-[#fdfdfd] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500">
-                          <div className="flex justify-between items-start mb-6">
-                            <div className="truncate mr-2">
-                              <h3 className="font-black text-slate-900 leading-tight truncate">{u.name}</h3>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tighter truncate">{u.email}</p>
-                            </div>
-                            <span className="shrink-0 bg-slate-100 text-slate-600 text-[9px] font-black px-2 py-1 rounded-md uppercase">
-                              {u.role}
-                            </span>
+                        <div key={u._id} className="p-6 border-4 border-black bg-[#fafafa] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all">
+                          <div className="mb-6">
+                             <div className="bg-black text-white px-2 py-0.5 w-fit text-[9px] font-black uppercase mb-2">ID: {u._id.slice(-5)}</div>
+                             <h3 className="text-2xl font-black uppercase italic leading-tight truncate">{u.name}</h3>
+                             <p className="text-xs font-bold text-slate-500 truncate">{u.email}</p>
+                          </div>
+                          <div className="flex items-center gap-2 mb-6">
+                             <span className="bg-indigo-400 border-2 border-black text-[10px] font-black px-2 py-1 uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                               {u.role}
+                             </span>
                           </div>
                           <button 
                             onClick={() => openUpdateModal(u)}
-                            className="w-full py-3 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 hover:border-indigo-600 hover:text-indigo-600 transition-all active:scale-95"
+                            className="w-full py-3 bg-yellow-300 border-4 border-black font-black uppercase italic text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all"
                           >
-                            Settings
+                            Modify Permissions
                           </button>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-[300px] text-slate-400">
-                      <p className="font-black uppercase tracking-widest text-xs">No users registered</p>
+                    <div className="text-center py-20 border-4 border-black border-dashed">
+                      <p className="font-black uppercase text-xl">User Registry Empty</p>
                     </div>
                   )}
                 </div>
               )}
 
               {activeTab === 'moderation' && (
-                <div className="p-6">
+                <div className="bg-pink-50 border-4 border-black p-4">
                   {moderationtickets.length > 0 ? (
                     <ModerateTicketsList tickets={moderationtickets} />
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-[300px] text-slate-400">
-                      <p className="font-black uppercase tracking-widest text-xs">Queue is clear</p>
-                      <p className="text-[10px] mt-2">No tickets require moderation at this time.</p>
+                    <div className="flex flex-col items-center justify-center h-[300px]">
+                      <p className="font-black uppercase text-4xl italic">Queue Clear</p>
                     </div>
                   )}
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>
 
-      {/* Modal remains same but with improved skill splitting */}
+      {/* Modal */}
       {isUpdateFormOpen && selectedUser && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={() => setIsUpdateFormOpen(false)} />
-          <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md p-10 animate-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-black text-slate-900">User Setup</h2>
-              <button onClick={() => setIsUpdateFormOpen(false)} className="text-slate-300 hover:text-rose-500 font-bold text-2xl transition-colors">&times;</button>
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-[2px]" onClick={() => setIsUpdateFormOpen(false)} />
+          <div className="relative bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] w-full max-w-md p-10">
+            <div className="flex justify-between items-center mb-10 bg-indigo-500 border-b-4 border-black -m-10 p-10 mb-10">
+              <h2 className="text-3xl font-black text-white uppercase italic">Modify User</h2>
+              <button onClick={() => setIsUpdateFormOpen(false)} className="bg-black text-white w-10 h-10 font-black text-xl border-2 border-white">×</button>
             </div>
             
-            <form onSubmit={handleUserFormUpdate} className="space-y-6">
+            <form onSubmit={handleUserFormUpdate} className="space-y-8 mt-4">
               <div>
-                <label className="block text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Access Level</label>
+                <label className="block text-xs font-black uppercase mb-2">Access Authority</label>
                 <select 
-                  className="w-full p-4 bg-slate-50 border-2 border-transparent rounded-2xl font-bold text-sm focus:border-indigo-500 focus:bg-white outline-none transition-all"
+                  className="w-full p-4 border-4 border-black font-black uppercase text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] outline-none appearance-none"
                   value={form.role}
                   onChange={(e) => setForm({ ...form, role: e.target.value })}
                 >
@@ -310,18 +351,18 @@ const Admin = () => {
               </div>
               
               <div>
-                <label className="block text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Specialties (Comma separated)</label>
+                <label className="block text-xs font-black uppercase mb-2">Technical Specialties</label>
                 <input 
                   type="text"
-                  className="w-full p-4 bg-slate-50 border-2 border-transparent rounded-2xl font-bold text-sm focus:border-indigo-500 focus:bg-white outline-none transition-all"
-                  placeholder="e.g. Frontend, API, Security"
+                  className="w-full p-4 border-4 border-black font-black text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] outline-none"
+                  placeholder="UI, API, SYSTEM"
                   value={form.skills}
                   onChange={(e) => setForm({ ...form, skills: e.target.value })}
                 />
               </div>
 
-              <button type="submit" className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-100 hover:bg-indigo-700 active:scale-[0.98] transition-all">
-                Update Profile
+              <button type="submit" className="w-full py-5 bg-emerald-400 border-4 border-black font-black uppercase italic tracking-widest shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+                Commit Changes →
               </button>
             </form>
           </div>
