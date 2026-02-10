@@ -65,7 +65,7 @@ const Admin = () => {
       });
       if (res.ok) {
         const userData = await res.json();
-        // FIX: Ensure userData is an array before setting state
+        console.log(userData);
         setUsers(Array.isArray(userData) ? userData : []);
       } else {
         setUsers([]); // Reset to empty array on error
