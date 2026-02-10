@@ -14,7 +14,7 @@ export const authenticate = async (req, res, next)=>{
         }
 
         const decoded = jwt.decode(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.uderId);
+        const user = await User.findById(decoded.userId);
 
         if(!user){
             throw new Error();

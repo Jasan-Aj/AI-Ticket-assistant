@@ -11,13 +11,24 @@ import Admin from "./pages/Admin.jsx"
 import UserTicketDetails from "./pages/UserTicketDetails.jsx"
 import CreateTicket from './pages/CreateTicket.jsx'
 import Moderator from './pages/Moderator.jsx'
+import LandingPage from "./pages/LandingPage.jsx"
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+
         <Route
-        path='/'
+          path='/'
+          element = {
+            <CheckAuth protectedRoute={false}>
+              <LandingPage/>
+            </CheckAuth>
+          }
+        />
+
+        <Route
+        path='/dashboard'
         element = {
           <CheckAuth protectedRoute={true}>
             <Tickets/>
@@ -28,7 +39,7 @@ createRoot(document.getElementById('root')).render(
         <Route
           path='/tickets/:id'
           element = {
-            <CheckAuth protectedRoute={true}>
+            <CheckAuth protectedRoute={false}>
               <TicketDetails/>
             </CheckAuth>
           }

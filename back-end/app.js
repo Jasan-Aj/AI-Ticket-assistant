@@ -1,5 +1,5 @@
-import express from "express";
-import { connectDatabase } from "./database/mongodb";
+import express from "express"
+import { connectDatabase } from "./database/mongodb.js";
 import cors from "cors";
 import userRoutes from "./routers/user.routes.js";
 import authRoutes from "./routers/auth.routes.js";
@@ -20,20 +20,22 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/ticket", ticketRoutes);
 
-app.use("/api/inngest",serve({
-    client: inngest,
-    functions:[onTicketCreated, onUserSignUp]
-}));
+// app.use("/api/inngest",serve({
+//     client: inngest,
+//     functions:[onTicketCreated, onUserSignUp]
+// }));
 
 const startServer = async ()=>{
     try{
         await connectDatabase();
-        application.listen(process.env.PORT,()=>{
+        app.listen(process.env.PORT,()=>{
             console.log(`Server running on PORT: ${process.env.PORT || 3000}`);
         })
     }catch(error){
         console.log(error);
     }
 }
+
+
 
 startServer();

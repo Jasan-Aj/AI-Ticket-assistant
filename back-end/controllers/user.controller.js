@@ -2,16 +2,16 @@ import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import inngest from "../inngest/client.js";
+import {inngest} from "../inngest/client.js";
 
 export const signup = async (req, res)=>{
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    // const session = await mongoose.startSession();
+    // session.startTransaction();
 
     try{
         const {name, email, password, skills =[]} = req.body;
-        const isUserExist = await User.findOne(email).session(session);
-
+        const isUserExist = await User.findOne({email});
+       
         if(isUserExist){
             throw new Error("User already exist!");
         }
@@ -21,12 +21,12 @@ export const signup = async (req, res)=>{
 
         const user = await User.create({
             email, name, skills, password: hashedPassword
-        },{session});
+        });
 
         const token = jwt.sign({userId: user._id, role: user.role},process.env.JWT_SECRET);
 
-        await session.commitTransaction();
-        session.endSession();
+        // await session.commitTransaction();
+        // session.endSession();
 
         // await inngest.run({
         //     name: "user/sign-up",
@@ -43,10 +43,10 @@ export const signup = async (req, res)=>{
         });
 
     }catch(error){
-        if(session.inTransaction){
-            await session.abortTransaction();
-        }
-        session.endSession();
+        // if(session.inTransaction){
+        //     await session.abortTransaction();
+        // }
+        // session.endSession();
         console.log("Error in sign-up: ", error);
         return res.status(500).json({
             success: false,
@@ -59,7 +59,7 @@ export const signin = async (req, res)=>{
 
     try{
         const {email, password} = req.body;
-        const user = await User.findOne(email);
+        const user = await User.findOne({email});
 
         if(!user){
             throw new Error("User does not exist!");
@@ -70,7 +70,7 @@ export const signin = async (req, res)=>{
             throw new Error("Invalid password!");
         } 
 
-        const token = jwt.sign({userId: user._id, role: user.role});
+        const token = jwt.sign({userId: user._id, role: user.role},process.env.JWT_SECRET);
 
         return res.status(200).json({
             succes: true,
@@ -95,8 +95,8 @@ export const signout = async (req, res)=>{
 }
 
 export const updateUser = async (req, res)=>{
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    // const session = await mongoose.startSession();
+    // session.startTransaction();
 
     try{
 
@@ -105,7 +105,7 @@ export const updateUser = async (req, res)=>{
         }
 
         const {email, skills= [], role} = req.body;
-        const user = await User.findOne(email).session(session);
+        const user = await User.findOne(email);
         if(!user){
             throw new Error("user does not exist!");
         }
@@ -113,10 +113,10 @@ export const updateUser = async (req, res)=>{
         await User.updateOne(
             {email},
             {skills: skills.lenght ? skills : user.skills, role:  role ? role: user.role}
-        ).session(session);
+        );
 
-        await session.commitTransaction();
-        session.endSession();
+        // await session.commitTransaction();
+        // session.endSession();
 
         res.status(200).json({
             succes: true,
@@ -127,10 +127,10 @@ export const updateUser = async (req, res)=>{
         });
 
     }catch(error){
-        if(session.inTransaction){
-            await session.abortTransaction();
-        }
-        session.endSession();
+        // if(session.inTransaction){
+        //     await session.abortTransaction();
+        // }
+        // session.endSession();
         console.log("Error in update user: ", error);
         
         return res.status(500).json({

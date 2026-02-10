@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
 
 function Login() {
-
   const [form, setForm] = useState({email:"", password:""});
   const [loading, setloading] = useState(false);
   const navigate = useNavigate();
@@ -20,9 +19,8 @@ function Login() {
   }
 
   const validateInput = ()=>{
-    if(form.email == "" || form.password == ""){
-      console.log(form.email, form.password, form.confirmPassword);
-      handleError("Fill All Required Feilds");
+    if(form.email === "" || form.password === ""){
+      handleError("Fill All Required Fields");
       return false;
     }
     return true;
@@ -31,72 +29,101 @@ function Login() {
   const handleSubmit = async(event)=>{
     event.preventDefault();
     const validateRes = validateInput();
+    if(!validateRes) return;
+
     setloading(true);
+    try{
+      const res = await fetch(`${import.meta.env.VITE_URL}/auth/sign-in`,{
+        method: "POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(form)
+      });
 
-    if(validateRes){
-      try{
-        const res = await fetch(`${import.meta.env.VITE_URL}/auth/login`,{
-          method: "POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body: JSON.stringify(form)
-        });
-
-        if(res.ok){
-          const jsonRes = res.json;
-          localStorage.setItem("token",jsonRes.data.token);
-          localStorage.setItem("user",JSON.stringify(jsonRes.data.user));
-          setForm({email: "", password:""})
-          navigate("/");
-        }else{
-          handleError("Failed login");
-        }
-
-      }catch(error){
-        handleError("Something went Wrong");
+      if(res.ok){
+        const jsonRes = await res.json();
+        localStorage.setItem("token", jsonRes.data.token);
+        localStorage.setItem("user", JSON.stringify(jsonRes.data.user));
+        setForm({email: "", password:""});
+        navigate("/");
+      } else {
+        handleError("Invalid Credentials");
       }
-      finally{
-        setloading(false);
-      } 
-    }
+    } catch(error){
+      handleError("Something went Wrong");
+    } finally {
+      setloading(false);
+    } 
   }
 
   return (
-    <div className='bg-gray-100 w-screen h-screen relative'>
-      {
-            error.state && (
-            <div className='absolute bottom-6 right-6 bg-white shadow-lg border-l-4 border-red-500 rounded-lg px-4 py-4 z-10'>
-                <p className='text-red-900 font-semibold'>
-                {error.message}
-                </p>
-            </div>
-            )
-        }
-      <div className='flex justify-center h-screen items-center'>
-        <div className=' bg-white  border  border-b-3 border-r-3 rounded-lg'>
-          <div className='text-black text-2xl font-semibold text-center py-4'>Login</div>
-          <form onSubmit={handleSubmit}>
-            <div className='px-4 pt-4 flex flex-col'>
-              <label htmlFor="" className='text-black text-md'>Email</label>
-              <input className='border-2 border-gray-500 rounded p-1 sm:w-sm text-black' onChange={(e)=>handleChange(e)} name='email' type="text"/>
+    <div className='bg-white w-screen h-screen relative font-sans selection:bg-amber-200'>
+      
+      {/* Neobrutalist Error Toast */}
+      {error.state && (
+        <div className='fixed top-6 right-6 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg px-6 py-4 z-50 animate-in fade-in slide-in-from-top-4 duration-300'>
+            <p className='text-black font-black uppercase text-xs tracking-widest flex items-center gap-2'>
+              <span className='text-red-600 text-lg'>×</span> {error.message}
+            </p>
+        </div>
+      )}
+
+      <div className='flex justify-center h-screen items-center px-4'>
+        <div className='bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-2xl w-full max-w-md overflow-hidden'>
+          
+          {/* Header */}
+          <div className='bg-blue-500 border-b-2 border-black py-6'>
+            <h2 className='text-white text-3xl font-black text-center uppercase italic tracking-tighter'>
+              Welcome Back
+            </h2>
+          </div>
+
+          <form onSubmit={handleSubmit} className='p-8'>
+            <div className='space-y-6'>
+              {/* Email Input */}
+              <div className='flex flex-col gap-2'>
+                <label className='font-black uppercase text-xs tracking-widest text-slate-700'>Email Address</label>
+                <input 
+                  className='border-2 border-black rounded-xl p-3 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all text-black font-bold' 
+                  onChange={handleChange} 
+                  name='email' 
+                  type="email"
+                  placeholder="name@company.com"
+                  value={form.email}
+                />
+              </div>
+
+              {/* Password Input */}
+              <div className='flex flex-col gap-2'>
+                <label className='font-black uppercase text-xs tracking-widest text-slate-700'>Password</label>
+                <input 
+                  className='border-2 border-black rounded-xl p-3 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all text-black font-bold' 
+                  onChange={handleChange} 
+                  name='password' 
+                  type="password"
+                  placeholder="••••••••"
+                  value={form.password}
+                />
+              </div>
             </div>
 
-            <div className='px-4 pt-4 flex flex-col'>
-              <label htmlFor="" className='text-black text-md'>Password</label>
-              <input className='border-2 border-gray-500 rounded p-1 sm:w-sm text-black' onChange={(e)=>handleChange(e)} name='password' type="text"/>
-            </div>
-
-            <div className='py-5 flex justify-center px-4'>
-              <button type='submit' className='bg-blue-700 py-2 w-full font-semibold rounded-lg cursor-pointer text-white'>Login</button>
+            <div className='mt-10'>
+              <button 
+                type='submit' 
+                disabled={loading}
+                className={`group relative bg-amber-400 border-2 border-black py-4 w-full font-black uppercase tracking-widest rounded-xl cursor-pointer transition-all active:translate-y-1 active:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-amber-300 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+              >
+                {loading ? 'Authenticating...' : 'Sign In →'}
+              </button>
             </div>
           </form>
-          <div className='text-sm flex justify-center pt-1 pb-4'>
-            <p className='text-black'>Dont have an account?</p>
-            <Link className='text-blue-800 font-semibold pl-2 cursor-pointer' to={"/signup"} >Signup</Link>
+
+          <div className='bg-slate-50 border-t-2 border-black py-4 text-center'>
+            <p className='text-black font-bold text-sm uppercase tracking-tighter'>
+              Don't have an account? 
+              <Link className='text-blue-600 hover:underline pl-2' to={"/signup"}>Join the flow</Link>
+            </p>
           </div>
         </div>
-       
       </div>
     </div>
   )

@@ -2,34 +2,51 @@ import React, { useState } from 'react'
 
 function Navbar({title}) {
     const [isActive, setActive] = useState(false); 
-    const user = localStorage.getItem("user");
+    // Small fix: Added optional chaining and a fallback to prevent crashes if localStorage is empty
+    const user = JSON.parse(localStorage.getItem("user")) || { name: "Guest" };
 
     return (
-        <nav className='mx-4 my-2'>
-            <div>
-                <div className='flex bg-blue-500 justify-between h-13 items-center rounded-lg border border-l-0 border-r-3 border-b-3 border-t-0 '>
-                    <div className='pl-4 text-xl text-white font-semibold'>Logo</div>
-                    <div className='font-semibold text-2xl text-white'>{title}</div>
-                    <div className='flex items-center pr-9 relative'>
-                        <div 
-                            className='bg-green-500 w-9 h-9 rounded-full flex items-center justify-center text-lg font-semibold text-white cursor-pointer hover:bg-green-600 transition-colors' 
-                            onClick={(e) => setActive(!isActive)}
-                        >
-                            J
+        <nav className='mx-4 my-4'>
+            <div className='relative'>
+                {/* Main Nav Bar */}
+                <div className='flex bg-blue-500 justify-between h-16 items-center rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'>
+                    
+                    {/* Logo Section */}
+                    <div className='pl-6 text-2xl text-white font-black italic tracking-tighter uppercase'>
+                        Tix<span className='text-amber-300'>Flow</span>
+                    </div>
+
+                    {/* Page Title */}
+                    <div className='hidden md:block font-black text-xl uppercase text-white tracking-widest'>
+                        {title}
+                    </div>
+
+                    {/* User Profile Section */}
+                    <div className='flex items-center pr-6 relative'>
+                        <div className='flex items-center gap-3 bg-white/10 py-1.5 px-3 rounded-full border border-white/20'>
+                            <p className='text-white font-bold text-sm hidden sm:block'>{user.name}</p>
+                            <div 
+                                className='bg-amber-300 w-10 h-10 rounded-full flex items-center justify-center text-lg font-black text-black border-2 border-black cursor-pointer hover:bg-amber-400 transition-all hover:scale-105 active:scale-95' 
+                                onClick={() => setActive(!isActive)}
+                            >
+                                {user.name.charAt(0).toUpperCase()}
+                            </div>
                         </div>
-                        <p className='text-white ml-2'>{user.name}</p>
                         
-                        {/* Dropdown Menu */}
+                        {/* Dropdown Menu - Styled with Neobrutalist Vibe */}
                         {isActive && (
-                            <div className='absolute top-full right-8 mt-2 bg-white shadow-lg rounded-lg py-2 min-w-30 z-50 border border-gray-200'>
-                                <div className='px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer'>
+                            <div className='absolute top-[calc(100%+12px)] right-0 bg-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl py-2 min-w-[160px] z-[100] overflow-hidden'>
+                                <div className='px-4 py-2 text-black font-bold text-sm border-b-2 border-slate-100 hover:bg-amber-50 cursor-pointer transition-colors'>
                                     My Tickets
                                 </div>
+                                <div className='px-4 py-2 text-black font-bold text-sm hover:bg-amber-50 cursor-pointer transition-colors'>
+                                    Settings
+                                </div>
                                 <div 
-                                    className='px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer border-t border-gray-100'
+                                    className='px-4 py-2 text-red-600 font-black text-sm hover:bg-red-50 cursor-pointer border-t-2 border-black transition-colors'
                                     onClick={() => console.log('Logging out...')}
                                 >
-                                    Logout
+                                    LOGOUT
                                 </div>
                             </div>
                         )}
@@ -40,4 +57,4 @@ function Navbar({title}) {
     );
 }
 
-export default Navbar
+export default Navbar;

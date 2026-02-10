@@ -7,6 +7,8 @@ function CheckAuth({children, protectedRoute}) {
   const [loading, setLoading] = useState(true);
   useEffect(()=>{
     const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+
     if(protectedRoute){
       if(!token){
         navigate("/login")
@@ -15,13 +17,13 @@ function CheckAuth({children, protectedRoute}) {
       }
     }else{
       if(token){
-        if(token.user.role == "admin"){
+        if(user.role == "admin"){
           navigate("/admin")
         }
-        else if(token.user.role == "moderator"){
+        else if(user.role == "moderator"){
           navigate("/admin")
         }else{
-          navigate("/");
+          navigate("/dashboard");
         }
         
       }else{

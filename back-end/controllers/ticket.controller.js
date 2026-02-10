@@ -1,12 +1,12 @@
-import Ticket from "../models/ticket.model";
-import { inngest } from "../inngest/client";
+import Ticket from "../models/ticket.model.js";
+import { inngest } from "../inngest/client.js";
 
 
 export const createTicket = async(req, res)=>{
     try{
         const {title, description} = req.body;
         if(!title || !description){
-            res.status(400).json({
+            return res.status(400).json({
                 msg: "Title and Description are required!"
             });
         }
@@ -47,16 +47,13 @@ export const getTickets = async (req, res)=>{
         else if(user.role === "moderator"){
             tickets = await Ticket.find({ assignedTo: user._id });
         }
-        else{
-            tickets = (await Ticket.find()).filter({
-                createdBy: user._id.toString()
-            }).sort({
-                createdAt: -1
-            });
+        else {
+            tickets = await Ticket.find({ createdBy: user._id }).sort({ createdAt: -1 });
         }
 
         return res.status(200).json(tickets)
     }catch(error){
+        console.log(error);
         return res.status(500).json({
             message: "Internal sserver error"
         });
@@ -67,6 +64,7 @@ export const getTicket = async (req, res)=>{
     const ticketId = req.params.id;
     const user = req.user;
     let ticket;
+    console.log(ticketId.toString());
     try{
         if(user.role !== "user"){
             ticket = await Ticket.findById(ticketId).populate("AssignedTo",["email", "name"]);
@@ -75,7 +73,7 @@ export const getTicket = async (req, res)=>{
         }
 
         if(!ticket){
-            res.status(400).json({
+            return res.status(400).json({
                 message: "Ticket does not exist!"
             });
         }
@@ -97,13 +95,13 @@ export const updateTicket = async (req, res)=>{
     try{
         const ticket = await Ticket.findById(ticketId);
         if(!ticket){
-            res.status(400).json({
+            return res.status(400).json({
                 message: "Ticket does not exist!"
             });
         }
 
         if(!response){
-            res.status(400).json({
+            return res.status(400).json({
                 message: "There is no any response to update!"
             });
         }
@@ -139,18 +137,18 @@ export const getModerateTickets = async (req, res)=>{
     }
 }
 
-const deleteTicket = async (req, res)=>{
+export const deleteTicket = async (req, res)=>{
     const user = req.user;
     const ticketId = req.params.id;
 
     try{
         if(user.role !== "admin"){
-            res.status(401).json({message: "Not authorized"});
+            return res.status(401).json({message: "Not authorized"});
         }
 
         const ticket = await Ticket.findById(ticketId);
         if(!ticket){
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Ticket does not found!"
             });
         }

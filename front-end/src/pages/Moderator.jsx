@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 function Moderator() {
 
-  const user = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
 
   const [tickets, setTickets] = useState([]);

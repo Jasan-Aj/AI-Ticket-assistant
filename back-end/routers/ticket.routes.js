@@ -14,6 +14,6 @@ router.post("/update/:id",authenticate, updateTicket);
 
 router.get("/moderate",authenticate, getModerateTickets);
 
-router.delete("/delete",authenticate, deleteTicket);
+router.delete("/delete/:id",authenticate, deleteTicket);
 
 export default router;
