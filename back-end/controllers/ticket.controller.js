@@ -42,7 +42,7 @@ export const getTickets = async (req, res)=>{
         const user = req.user;
         let tickets = [];
         if(user.role !== "user"){
-            tickets = await Ticket.find().populate("AssignedTo",["email","name"]).sort({createdAt: -1});
+            tickets = await Ticket.find().sort({createdAt: -1});
         }
         else if(user.role === "moderator"){
             tickets = await Ticket.find({ assignedTo: user._id });
@@ -64,7 +64,7 @@ export const getTicket = async (req, res)=>{
     const ticketId = req.params.id;
     const user = req.user;
     let ticket;
-    console.log(ticketId.toString());
+    
     try{
         if(user.role !== "user"){
             ticket = await Ticket.findById(ticketId).populate("AssignedTo",["email", "name"]);
@@ -122,10 +122,10 @@ export const updateTicket = async (req, res)=>{
 }
 
 export const getModerateTickets = async (req, res)=>{
+    
     try{
         const user = req.user;
         let tickets = [];
-        
         tickets = await Ticket.find({ assignedTo: user._id });
 
         return res.status(200).json(tickets);
@@ -154,7 +154,7 @@ export const deleteTicket = async (req, res)=>{
         }
 
         await Ticket.findByIdAndDelete(ticketId);
-        res.json(200).json({message: "Successfully deleted"});
+        return res.json(200).json({message: "Successfully deleted"});
 
     }catch(error){
         res.status(500).json({

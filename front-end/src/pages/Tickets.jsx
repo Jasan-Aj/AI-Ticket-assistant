@@ -30,6 +30,7 @@ function Tickets() {
       if (res.ok) {
         const ticketsData = await res.json();
         setTickets(ticketsData);
+        
       } else {
         handleError("Failed to fetch tickets!");
       }
@@ -46,7 +47,7 @@ function Tickets() {
 
   return (
     <div className='relative min-h-screen flex flex-col bg-white font-sans text-slate-900'>
-      <Navbar title={"My Tickets"} />
+      <Navbar title={"My Tickets"} handleError={handleError} />
 
       {/* Floating Create Button for Mobile/Quick Access */}
       <button 

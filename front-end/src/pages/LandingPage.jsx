@@ -30,11 +30,11 @@ const LandingPage = () => {
           {/* LOGO CONTAINER */}
           <div className="flex items-center gap-3 shrink-0">
             <div className={`bg-indigo-600 border-2 border-black rounded-lg flex items-center justify-center transition-all duration-500 ${isScrolled ? "w-11 h-11 rotate-0" : "w-10 h-10 -rotate-6"}`}>
-              <span className="font-black text-white italic text-xl">F</span>
+              <span className="font-black text-white italic text-xl">TF</span>
             </div>
             
             <span className={`font-black text-xl uppercase tracking-tighter transition-all duration-300 ${isScrolled ? "opacity-0 w-0 -translate-x-10" : "opacity-100 w-auto"}`}>
-              Flow.io
+              TikFlow.io
             </span>
           </div>
 

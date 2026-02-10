@@ -1,9 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Navbar({title}) {
+function Navbar({title, handleError}) {
     const [isActive, setActive] = useState(false); 
-    // Small fix: Added optional chaining and a fallback to prevent crashes if localStorage is empty
+    
     const user = JSON.parse(localStorage.getItem("user")) || { name: "Guest" };
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+
+    const handleLogout = async()=>{
+        try{
+            const res = await fetch(`${import.meta.env.VITE_URL}/auth/sign-out`,{
+                method: "POST",
+                headers:{
+                    "Authorization" : `Bearer ${token}`
+                }
+            });
+
+            if(res.ok){
+                navigate("/");
+            }else{
+                console.log(res);
+                handleError("Failed to logout!")
+            }
+
+        }catch(error){
+            handleError("Failed logout!")
+        }finally{
+            setActive(false);
+        }
+    }
 
     return (
         <nav className='mx-4 my-4'>
@@ -13,7 +39,7 @@ function Navbar({title}) {
                     
                     {/* Logo Section */}
                     <div className='pl-6 text-2xl text-white font-black italic tracking-tighter uppercase'>
-                        Tix<span className='text-amber-300'>Flow</span>
+                        Tik<span className='text-amber-300'>Flow.IO</span>
                     </div>
 
                     {/* Page Title */}
@@ -44,7 +70,7 @@ function Navbar({title}) {
                                 </div>
                                 <div 
                                     className='px-4 py-2 text-red-600 font-black text-sm hover:bg-red-50 cursor-pointer border-t-2 border-black transition-colors'
-                                    onClick={() => console.log('Logging out...')}
+                                    onClick={() => handleLogout()}
                                 >
                                     LOGOUT
                                 </div>

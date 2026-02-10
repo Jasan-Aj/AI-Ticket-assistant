@@ -11,6 +11,7 @@ export const authenticate = async (req, res, next)=>{
 
         if(!token){
             throw new Error();
+            console.log("no token")
         }
 
         const decoded = jwt.decode(token, process.env.JWT_SECRET);

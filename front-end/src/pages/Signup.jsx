@@ -41,7 +41,7 @@ function Signup() {
 
     setloading(true);
     try{
-      const res = await fetch(`${import.meta.env.VITE_URL}/auth/signup`,{
+      const res = await fetch(`${import.meta.env.VITE_URL}/auth/sign-up`,{
         method: "POST",
         headers:{"Content-Type":"application/json"},
         body: JSON.stringify(form)

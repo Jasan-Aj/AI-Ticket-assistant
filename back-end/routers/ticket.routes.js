@@ -8,11 +8,11 @@ router.post("/",authenticate,createTicket);
 
 router.get("/",authenticate,getTickets);
 
+router.get("/moderate",authenticate, getModerateTickets);
+
 router.get("/:id",authenticate, getTicket);
 
 router.post("/update/:id",authenticate, updateTicket);
-
-router.get("/moderate",authenticate, getModerateTickets);
 
 router.delete("/delete/:id",authenticate, deleteTicket);
 

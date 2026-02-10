@@ -6,6 +6,7 @@ const Admin = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const [tickets, setTickets] = useState([]);
+  const [moderationtickets, setModerationTickets] = useState([]);
   const [users, setUsers] = useState([]);
   const [isActive, setActive] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,22 +21,39 @@ const Admin = () => {
     setTimeout(() => setError({ state: false, message: "" }), 3000);
   };
 
-  // Wrapped in useCallback to prevent infinite loops in useEffect
   const fetchTickets = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_URL}/ticket/moderate`, {
+      const res = await fetch(`${import.meta.env.VITE_URL}/ticket`, {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}` }
       });
+      
       if (res.ok) {
         const ticketsData = await res.json();
-        setTickets(ticketsData);
+        // Ensure we are setting an array
+        setTickets(Array.isArray(ticketsData) ? ticketsData : []);
       }
     } catch (err) {
       handleError("Internal server error!");
     } finally {
       setLoading(false);
+    }
+  }, [token]);
+
+  const fetchModerationTickets = useCallback(async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_URL}/ticket/moderate`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      
+      if (res.ok) {
+        const ticketsData = await res.json();
+        setModerationTickets(Array.isArray(ticketsData) ? ticketsData : []);
+      }
+    } catch (err) {
+      handleError("Internal server error!");
     }
   }, [token]);
 
@@ -47,10 +65,14 @@ const Admin = () => {
       });
       if (res.ok) {
         const userData = await res.json();
-        setUsers(userData);
+        // FIX: Ensure userData is an array before setting state
+        setUsers(Array.isArray(userData) ? userData : []);
+      } else {
+        setUsers([]); // Reset to empty array on error
       }
     } catch (err) {
       handleError("Failed to fetch users!");
+      setUsers([]);
     }
   }, [token]);
 
@@ -58,8 +80,9 @@ const Admin = () => {
     if (token) {
       fetchTickets();
       fetchUsers();
+      fetchModerationTickets();
     }
-  }, [fetchTickets, fetchUsers, token]);
+  }, [fetchTickets, fetchUsers, fetchModerationTickets, token]);
 
   const handleDelete = async (ticket) => {
     if (!window.confirm("Delete this ticket?")) return;
@@ -75,7 +98,6 @@ const Admin = () => {
     }
   };
 
-  // Open modal and PRE-FILL data
   const openUpdateModal = (user) => {
     setSelectedUser(user);
     setForm({ 
@@ -125,7 +147,6 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-[#fafafa] p-4 md:p-8 font-sans text-slate-800">
-      {/* Toast Notification */}
       {error.state && (
         <div className='fixed bottom-10 right-10 bg-white shadow-2xl border-l-4 border-rose-500 rounded-xl px-6 py-4 z-[110] animate-in fade-in slide-in-from-bottom-4 duration-300'>
           <p className='text-slate-800 font-bold text-sm'>{error.message}</p>
@@ -174,67 +195,89 @@ const Admin = () => {
 
         <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
           {loading ? (
-            <div className="flex items-center justify-center h-[400px] text-slate-400 font-bold">Loading...</div>
+            <div className="flex items-center justify-center h-[400px] text-slate-400 font-bold animate-pulse">Loading data...</div>
           ) : (
             <>
               {activeTab === 'tickets' && (
                 <div className="p-4 overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="text-left">
-                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Title</th>
-                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
-                        <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                      {tickets.map((ticket) => (
-                        <tr key={ticket._id} className="group hover:bg-slate-50/50 transition-colors">
-                          <td className="px-6 py-5 font-bold text-slate-700">{ticket.title}</td>
-                          <td className="px-6 py-5">
-                            <span className={`px-3 py-1 rounded-lg text-[10px] font-black border uppercase ${getStatusColor(ticket.status)}`}>
-                              {ticket.status}
-                            </span>
-                          </td>
-                          <td className="px-6 py-5 text-right">
-                            <button onClick={() => handleDelete(ticket)} className="text-rose-400 hover:text-rose-600 font-black text-[10px] uppercase tracking-widest">
-                              Delete
-                            </button>
-                          </td>
+                  {tickets.length > 0 ? (
+                    <table className="w-full">
+                      <thead>
+                        <tr className="text-left">
+                          <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Title</th>
+                          <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
+                          <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Action</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {tickets.map((ticket) => (
+                          <tr key={ticket._id} className="group hover:bg-slate-50/50 transition-colors">
+                            <td className="px-6 py-5 font-bold text-slate-700">{ticket.title}</td>
+                            <td className="px-6 py-5">
+                              <span className={`px-3 py-1 rounded-lg text-[10px] font-black border uppercase ${getStatusColor(ticket.status)}`}>
+                                {ticket.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-5 text-right">
+                              <button onClick={() => handleDelete(ticket)} className="text-rose-400 hover:text-rose-600 font-black text-[10px] uppercase tracking-widest">
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-[350px] text-slate-400">
+                      <p className="font-black uppercase tracking-widest text-xs">No tickets found</p>
+                      <p className="text-[10px] mt-2">Active support tickets will appear here.</p>
+                    </div>
+                  )}
                 </div>
               )}
 
               {activeTab === 'users' && (
-                <div className="p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {users.map((u) => (
-                    <div key={u._id} className="p-6 rounded-[2rem] border border-slate-100 bg-[#fdfdfd] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500">
-                      <div className="flex justify-between items-start mb-6">
-                        <div>
-                          <h3 className="font-black text-slate-900 leading-tight">{u.name}</h3>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tighter">{u.email}</p>
+                <div className="p-8">
+                  {users.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {users.map((u) => (
+                        <div key={u._id} className="p-6 rounded-[2rem] border border-slate-100 bg-[#fdfdfd] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500">
+                          <div className="flex justify-between items-start mb-6">
+                            <div className="truncate mr-2">
+                              <h3 className="font-black text-slate-900 leading-tight truncate">{u.name}</h3>
+                              <p className="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-tighter truncate">{u.email}</p>
+                            </div>
+                            <span className="shrink-0 bg-slate-100 text-slate-600 text-[9px] font-black px-2 py-1 rounded-md uppercase">
+                              {u.role}
+                            </span>
+                          </div>
+                          <button 
+                            onClick={() => openUpdateModal(u)}
+                            className="w-full py-3 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 hover:border-indigo-600 hover:text-indigo-600 transition-all active:scale-95"
+                          >
+                            Settings
+                          </button>
                         </div>
-                        <span className="bg-slate-100 text-slate-600 text-[9px] font-black px-2 py-1 rounded-md uppercase">
-                          {u.role}
-                        </span>
-                      </div>
-                      <button 
-                        onClick={() => openUpdateModal(u)}
-                        className="w-full py-3 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 hover:border-indigo-600 hover:text-indigo-600 transition-all active:scale-95"
-                      >
-                        Settings
-                      </button>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-[300px] text-slate-400">
+                      <p className="font-black uppercase tracking-widest text-xs">No users registered</p>
+                    </div>
+                  )}
                 </div>
               )}
 
               {activeTab === 'moderation' && (
                 <div className="p-6">
-                  <ModerateTicketsList tickets={tickets} />
+                  {moderationtickets.length > 0 ? (
+                    <ModerateTicketsList tickets={moderationtickets} />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-[300px] text-slate-400">
+                      <p className="font-black uppercase tracking-widest text-xs">Queue is clear</p>
+                      <p className="text-[10px] mt-2">No tickets require moderation at this time.</p>
+                    </div>
+                  )}
                 </div>
               )}
             </>
@@ -242,7 +285,7 @@ const Admin = () => {
         </div>
       </div>
 
-      {/* Modal - Better Z-Index and Alignment */}
+      {/* Modal remains same but with improved skill splitting */}
       {isUpdateFormOpen && selectedUser && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onClick={() => setIsUpdateFormOpen(false)} />

@@ -11,7 +11,7 @@ export const signup = async (req, res)=>{
     try{
         const {name, email, password, skills =[]} = req.body;
         const isUserExist = await User.findOne({email});
-       
+
         if(isUserExist){
             throw new Error("User already exist!");
         }
@@ -90,9 +90,30 @@ export const signin = async (req, res)=>{
     }
 }
 
-export const signout = async (req, res)=>{
-    
-}
+export const signout = async (req, res) => {
+    try {
+        const token  = req.headers.authorization.split(" ")[1];
+        if(!token){
+            return res.status(401).json({message: "unauthorized"});
+        }
+
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
+            if(err) return res.status(401).json({
+                message: "Unauthorized"
+            });
+            console.log("logouted");
+            return res.status(200).json({
+                message: "Logout Successfully"
+            });
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ 
+            message: 'Server error during signout' 
+        });
+    }
+};
 
 export const updateUser = async (req, res)=>{
     // const session = await mongoose.startSession();
@@ -118,7 +139,7 @@ export const updateUser = async (req, res)=>{
         // await session.commitTransaction();
         // session.endSession();
 
-        res.status(200).json({
+        return res.status(200).json({
             succes: true,
             message: "user successfully updated!",
             data: {

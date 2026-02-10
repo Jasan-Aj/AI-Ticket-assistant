@@ -17,6 +17,7 @@ function CheckAuth({children, protectedRoute}) {
       }
     }else{
       if(token){
+        
         if(user.role == "admin"){
           navigate("/admin")
         }
