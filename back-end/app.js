@@ -20,10 +20,10 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/ticket", ticketRoutes);
 
-// app.use("/api/inngest",serve({
-//     client: inngest,
-//     functions:[onTicketCreated, onUserSignUp]
-// }));
+app.use("/api/inngest",serve({
+    client: inngest,
+    functions:[onTicketCreated, onUserSignUp]
+}));
 
 const startServer = async ()=>{
     try{

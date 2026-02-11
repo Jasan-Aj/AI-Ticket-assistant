@@ -28,10 +28,10 @@ export const signup = async (req, res)=>{
         // await session.commitTransaction();
         // session.endSession();
 
-        // await inngest.run({
-        //     name: "user/sign-up",
-        //     data: {email}
-        // });
+        await inngest.send({
+            name: "user/sign-up",
+            data: {email}
+        });
 
         return res.status(201).json({
             succes: true,
@@ -47,7 +47,7 @@ export const signup = async (req, res)=>{
         //     await session.abortTransaction();
         // }
         // session.endSession();
-        console.log("Error in sign-up: ", error);
+        
         return res.status(500).json({
             success: false,
             error: error
@@ -82,7 +82,7 @@ export const signin = async (req, res)=>{
         });
 
     }catch(error){
-        console.log("Error in sign-in: ", error);
+       
         return res.status(500).json({
             success: false,
             error: error
@@ -101,14 +101,13 @@ export const signout = async (req, res) => {
             if(err) return res.status(401).json({
                 message: "Unauthorized"
             });
-            console.log("logouted");
+            
             return res.status(200).json({
                 message: "Logout Successfully"
             });
         })
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({ 
             message: 'Server error during signout' 
         });
@@ -162,7 +161,7 @@ export const updateUser = async (req, res)=>{
         //     await session.abortTransaction();
         // }
         // session.endSession();
-        console.log("Error in update user: ", error);
+       
         
         return res.status(500).json({
             success: false,

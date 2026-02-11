@@ -17,12 +17,12 @@ export const createTicket = async(req, res)=>{
             createdBy: req.user._id.toString()
         });
 
-        // await inngest.run({
-        //     name: "user/on-ticket-create",
-        //     data: {
-        //         ticketId: newTicket._id.toString()
-        //     }
-        // })
+        await inngest.send({
+            name: "user/on-ticket-create",
+            data: {
+                ticketId: newTicket._id.toString()
+            }
+        })
 
         return res.status(201).json({
             message: "Ticket created successfully",
@@ -31,6 +31,7 @@ export const createTicket = async(req, res)=>{
 
     }catch(error){
         console.log("Failed to create new ticket!");
+        console.log(error);
         res.status(500).json({
             message: "Failed to create new ticket!"
         });

@@ -22,17 +22,11 @@ export const onTicketCreated = inngest.createFunction(
                 return ticketObject;
             });
 
-            //step 02: Update ticket status
-            await step.run("update-status",async()=>{
-                await Ticket.findByIdAndUpdate(
-                    ticketId,
-                    {status: "Pending"}
-                )
-            });
-
             const aiResponse = await analyzeTicket(ticket);
 
-            //step 03: Ai processing
+            console.log("ai response  ", aiResponse);
+
+            //step 02: Ai processing
             const relatedSkills = await step.run("AI-Processing", async()=>{
                 let skills = [];
                 if(aiResponse){
@@ -50,7 +44,7 @@ export const onTicketCreated = inngest.createFunction(
                 return skills;
             });
 
-            //step 04: assign moderator
+            //step 03: assign moderator
             const moderator = await step.run("assign-modertor", async()=>{
                 let user = await User.findOne({
                     role: "moderator",
@@ -73,6 +67,15 @@ export const onTicketCreated = inngest.createFunction(
                 });
 
                 return user;
+            });
+
+            //step 04: Update ticket status
+            await step.run("update-status",async()=>{
+                const ticket = await Ticket.findByIdAndUpdate(
+                    ticketId,
+                    {status: "Processing"}
+                )
+                return ticket;
             });
 
             //step 05: send notifiction email
