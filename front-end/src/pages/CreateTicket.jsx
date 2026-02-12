@@ -57,9 +57,6 @@ const CreateTicket = () => {
         setIsSubmitted(true);
         setTimeout(() => {
           navigate("/dashboard");
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 6000);
         }, 2000);
 
       } else {

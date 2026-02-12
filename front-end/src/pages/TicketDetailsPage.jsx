@@ -112,7 +112,7 @@ const TicketDetails = ({ ticket, closeModal, fetchTickets }) => {
                 <h3 className="font-black uppercase text-sm tracking-widest italic text-indigo-700">AI_Analysis</h3>
               </div>
               <div className="bg-indigo-50 border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-dashed">
-                <p className="text-lg font-bold text-indigo-900">{ticket.aiDescription}</p>
+                <p className="text-lg font-bold text-indigo-900 whitespace-pre-line">{ticket.aiDescription}</p>
               </div>
             </section>
           )}

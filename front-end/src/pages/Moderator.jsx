@@ -49,6 +49,10 @@ function Moderator() {
     window.location.reload(); // Triggers CheckAuth to redirect to login
   };
 
+  const assignedTickets = tickets.filter((ticket) => {
+    return ticket.status  !== "Completed"
+  });
+
   return (
     <div className="min-h-screen bg-white p-6 md:p-12 font-sans text-black">
       
@@ -103,7 +107,7 @@ function Moderator() {
       <main className="max-w-7xl mx-auto">
         <div className="mb-8 flex justify-between items-center">
           <h2 className="text-xs font-black uppercase tracking-[0.4em] text-slate-400 italic">
-            Active Tickets ({tickets.length})
+            Active Tickets ({assignedTickets.length})
           </h2>
           {loading && (
              <div className="font-black text-[10px] uppercase animate-pulse">Syncing...</div>
@@ -112,7 +116,7 @@ function Moderator() {
 
         <div className="border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden">
           {tickets.length > 0 ? (
-            <ModerateTicketsList tickets={tickets} fetchTickets={fetchTickets}/>
+            <ModerateTicketsList tickets={assignedTickets} fetchTickets={fetchTickets}/>
           ) : (
             <div className="p-20 text-center flex flex-col items-center justify-center">
               <div className="w-16 h-1 border-2 border-black mb-4"></div>
