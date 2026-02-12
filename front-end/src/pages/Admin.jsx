@@ -57,6 +57,10 @@ const Admin = () => {
     }
   }, [token]);
 
+  const inProgressTickets = moderationtickets.filter((ticket) => {
+    return ticket.status !== "Completed"
+  });
+
   const fetchUsers = useCallback(async () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_URL}/users`, {
@@ -313,7 +317,7 @@ const Admin = () => {
               {activeTab === 'moderation' && (
                 <div className="bg-pink-50 border-4 border-black p-4">
                   {moderationtickets.length > 0 ? (
-                    <ModerateTicketsList tickets={moderationtickets} />
+                    <ModerateTicketsList tickets={inProgressTickets} fetchTickets={fetchModerationTickets}/>
                   ) : (
                     <div className="flex flex-col items-center justify-center h-[300px]">
                       <p className="font-black uppercase text-4xl italic">Queue Clear</p>

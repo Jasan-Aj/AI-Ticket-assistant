@@ -55,7 +55,7 @@ function Tickets() {
       {/* Floating Create Button for Mobile */}
       <button 
         onClick={() => navigate("/tickets/create")}
-        className='fixed bottom-8 right-8 z-50 bg-amber-400 border-2 border-black w-16 h-16 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center text-3xl font-black hover:-translate-y-1 hover:bg-amber-300 transition-all active:translate-y-1 active:shadow-none'
+        className='fixed md:hidden block bottom-8 right-8 z-50 bg-amber-400 border-2 border-black w-16 h-16 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center text-3xl font-black hover:-translate-y-1 hover:bg-amber-300 transition-all active:translate-y-1 active:shadow-none'
       >
         +
       </button>

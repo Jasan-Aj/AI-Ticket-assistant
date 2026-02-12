@@ -45,9 +45,6 @@ export const getTickets = async (req, res)=>{
         if(user.role !== "user"){
             tickets = await Ticket.find().sort({createdAt: -1});
         }
-        else if(user.role === "moderator"){
-            tickets = await Ticket.find({ assignedTo: user._id });
-        }
         else {
             tickets = await Ticket.find({ createdBy: user._id }).sort({ createdAt: -1 });
         }
@@ -68,9 +65,9 @@ export const getTicket = async (req, res)=>{
     
     try{
         if(user.role !== "user"){
-            ticket = await Ticket.findById(ticketId).populate("AssignedTo",["email", "name"]);
+            ticket = await Ticket.findById(ticketId).populate("assignedTo",["email", "name"]);
         }else{
-            ticket = await Ticket.findById(ticketId);
+            ticket = await Ticket.findById(ticketId).populate("assignedTo",["email", "name"]);
         }
 
         if(!ticket){
@@ -90,9 +87,9 @@ export const getTicket = async (req, res)=>{
 
 export const updateTicket = async (req, res)=>{
     const ticketId = req.params.id;
-    const user = req.uset;
+    const user = req.user;
     const {response} = req.body;
-    console.log("in update ticket");
+    
     try{
         const ticket = await Ticket.findById(ticketId);
         if(!ticket){
@@ -112,7 +109,7 @@ export const updateTicket = async (req, res)=>{
             status: "Completed"
         });
 
-        res.status(200).json({message: "Successfully updated!"});
+        return res.status(200).json({message: "Successfully updated!"});
 
     }catch(error){
         console.log("Internal server error: ", error);
@@ -153,9 +150,8 @@ export const deleteTicket = async (req, res)=>{
                 message: "Ticket does not found!"
             });
         }
-
         await Ticket.findByIdAndDelete(ticketId);
-        return res.json(200).json({message: "Successfully deleted"});
+        return res.status(200).json({message: "Successfully deleted"});
 
     }catch(error){
         res.status(500).json({

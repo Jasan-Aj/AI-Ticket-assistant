@@ -11,29 +11,27 @@ const TicketDetails = ({ ticket, closeModal, fetchTickets }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (value.trim() === "") return handleError("Reply cannot be empty!");
+    
     try {
-      if (value.trim() === "") {
-        handleError("Reply cannot be empty!");
-      } else {
-        const res = await fetch(`${import.meta.env.VITE_URL}/ticket/update/${ticket._id}`, {
-          method: "POST",
-          headers: { 
-            "Authorization" : `Bearer ${token}`,
-            "Content-Type": "application/json"
-           },
-          body: JSON.stringify({ response: value })
-        });
+      const res = await fetch(`${import.meta.env.VITE_URL}/ticket/update/${ticket._id}`, {
+        method: "POST",
+        headers: { 
+          "Authorization" : `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ response: value })
+      });
 
-        if (res.ok) {
-          setReplyActive(false);
-          closeModal();
-          fetchTickets();
-        } else {
-          handleError("Failed to update Ticket!");
-        }
+      if (res.ok) {
+        setReplyActive(false);
+        closeModal();
+        fetchTickets();
+      } else {
+        handleError("Failed to update Ticket");
       }
     } catch (error) {
-      handleError("Internal server error");
+      handleError("Connection Error");
     }
   };
 
@@ -46,140 +44,120 @@ const TicketDetails = ({ ticket, closeModal, fetchTickets }) => {
     setIsMounted(true);
   }, []);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Pending': return 'bg-amber-400';
-      case 'Processing': return 'bg-blue-400';
-      case 'Completed': return 'bg-emerald-400';
-      default: return 'bg-slate-200';
-    }
-  };
-
-  const getPriorityColor = (priority) => {
-    switch (priority?.toLowerCase()) {
-      case 'high': return 'bg-rose-500 text-white';
-      case 'medium': return 'bg-yellow-400 text-black';
-      case 'low': return 'bg-emerald-500 text-white';
-      default: return 'bg-slate-800 text-white';
-    }
-  };
-
   return (
-    <div className="w-full bg-[#FDFCF0] text-black font-sans selection:bg-indigo-300">
-      {/* Neo-Brutalist Error Toast */}
+    <div className="w-full bg-white font-sans selection:bg-blue-200">
+      
+      {/* Error Toast */}
       {error.state && (
-        <div className='fixed bottom-6 right-6 bg-rose-400 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] px-6 py-4 z-[200] animate-bounce'>
-          <p className='font-black uppercase text-sm italic'>⚠ ERROR: {error.message}</p>
+        <div className='fixed top-6 right-6 bg-red-400 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg px-6 py-4 z-[200] animate-in fade-in slide-in-from-top-4'>
+          <p className='text-black font-black uppercase text-xs tracking-widest flex items-center gap-2'>
+            <span>⚠</span> {error.message}
+          </p>
         </div>
       )}
 
-      <div className={`transition-all duration-500 ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <div className={`transition-all duration-500 rounded-3xl overflow-hidden border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] ${isMounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
         
-        {/* Top Info Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div className="border-4 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between">
-            <span className="font-black uppercase text-xs tracking-widest opacity-60">Status</span>
-            <span className={`px-4 py-1 border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${getStatusColor(ticket?.status)}`}>
-              {ticket?.status || "Unknown"}
-            </span>
+        {/* Header Bar - Matching UserTicketDetails */}
+        <div className="bg-blue-500 border-b-4 border-black p-6 flex justify-between items-center">
+          <div className="space-y-1">
+            <p className="text-white font-black uppercase text-xs tracking-[0.3em]">Ticket Resolution</p>
+            <h1 className="text-2xl md:text-3xl font-black text-white uppercase italic tracking-tighter leading-none">
+              {ticket?.title || "Update Request"}
+            </h1>
           </div>
-          <div className="border-4 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between">
-            <span className="font-black uppercase text-xs tracking-widest opacity-60">Priority</span>
-            <span className={`px-4 py-1 border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${getPriorityColor(ticket?.priority)}`}>
-              {ticket?.priority || "Normal"}
-            </span>
-          </div>
+          <button 
+            onClick={closeModal}
+            className="bg-white border-2 border-black p-2 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
 
-        {/* Main Content Area */}
-        <div className="space-y-8">
+        {/* Content Section */}
+        <div className="p-6 md:p-8 space-y-8 bg-white">
+          
+          {/* Status and ID Row */}
+          <div className="flex flex-wrap gap-4">
+            <div className="bg-amber-400 border-2 border-black px-4 py-1 rounded-full font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+              STATUS: {ticket?.status}
+            </div>
+            <div className="bg-slate-100 border-2 border-black px-4 py-1 rounded-full font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+              PRIORITY: {ticket?.priority || "Medium"}
+            </div>
+          </div>
+
           {/* Description Block */}
           <section className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-black"></div>
-              <h3 className="font-black uppercase text-sm tracking-widest italic">User_Description</h3>
-            </div>
-            <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] min-h-[120px]">
-              <p className="text-xl font-bold leading-tight italic">"{ticket?.description || 'No description provided.'}"</p>
+            <h3 className="font-black uppercase text-xs tracking-widest text-slate-500 italic underline decoration-blue-500 decoration-4">Issue Description</h3>
+            <div className="bg-slate-50 border-2 border-black p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <p className="text-lg font-bold text-black leading-relaxed italic">
+                "{ticket?.description}"
+              </p>
+              <p className="mt-4 text-[10px] font-black uppercase text-blue-600">— Reported by {ticket?.createdBy?.name || 'User'}</p>
             </div>
           </section>
 
-          {/* AI Insights (If applicable) */}
+          {/* AI Section (If exists) */}
           {ticket?.aiDescription && (
             <section className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-indigo-600"></div>
-                <h3 className="font-black uppercase text-sm tracking-widest italic text-indigo-700">AI_Analysis</h3>
-              </div>
-              <div className="bg-indigo-50 border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-dashed">
-                <p className="text-lg font-bold text-indigo-900 whitespace-pre-line">{ticket.aiDescription}</p>
-              </div>
-            </section>
-          )}
-
-          {/* Skills Grid */}
-          {ticket?.relatedSkills?.length > 0 && (
-            <section className="space-y-3">
-              <h3 className="font-black uppercase text-xs tracking-[0.2em] opacity-60">Tags_Required:</h3>
-              <div className="flex flex-wrap gap-3">
-                {ticket.relatedSkills.map((skill, index) => (
-                  <span key={index} className="bg-yellow-300 border-2 border-black px-3 py-1 font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                    {skill}
-                  </span>
-                ))}
+              <h3 className="font-black uppercase text-xs tracking-widest text-slate-500 italic underline decoration-indigo-500 decoration-4">AI Analysis</h3>
+              <div className="bg-indigo-50 border-2 border-black p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-dashed">
+                <p className="text-base font-bold text-slate-800 leading-snug">
+                  {ticket.aiDescription}
+                </p>
               </div>
             </section>
           )}
 
-          {/* Footer Metadata */}
-          <div className="pt-8 border-t-4 border-black grid grid-cols-2 gap-4">
-            <div>
-              <p className="font-black uppercase text-[10px] opacity-50">Assigned_To</p>
-              <p className="font-black text-lg underline decoration-blue-500 decoration-4">{ticket?.assignedTo || 'UNASSIGNED'}</p>
-            </div>
-            <div className="text-right">
-              <p className="font-black uppercase text-[10px] opacity-50">Logged_On</p>
-              <p className="font-black text-lg">{new Date(ticket?.createdAt).toLocaleDateString()}</p>
-            </div>
-          </div>
-
-          {/* Action Area / Form */}
-          <div className="pt-6">
+          {/* Reply Interface */}
+          <div className="pt-4">
             {!isRplyActive ? (
               <button 
-                className='w-full bg-black text-white font-black uppercase py-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(79,70,229,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all tracking-widest' 
+                className='w-full bg-emerald-400 text-black font-black uppercase py-4 rounded-2xl border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all tracking-widest' 
                 onClick={() => setReplyActive(true)}
               >
-                Launch_Reply_Interface
+                Write Response →
               </button>
             ) : (
-              <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
-                <div className="flex items-center justify-between">
-                    <h3 className="font-black uppercase text-sm tracking-widest italic text-rose-600 underline decoration-2">Drafting_Resolution...</h3>
-                    <button 
-                        className="font-black uppercase text-xs underline hover:text-rose-600"
-                        onClick={() => setReplyActive(false)}
-                    >
-                        [ Abort ]
-                    </button>
+              <div className="space-y-4 animate-in slide-in-from-bottom-2 duration-300">
+                <div className="flex justify-between items-center">
+                   <h3 className="font-black uppercase text-xs tracking-widest text-rose-500 italic">Resolution Entry</h3>
+                   <button onClick={() => setReplyActive(false)} className="text-[13px] font-black uppercase underline cursor-pointer">Cancel</button>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <textarea 
-                    className='w-full bg-white border-4 border-black p-4 font-bold text-lg focus:outline-none focus:ring-4 focus:ring-indigo-300 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]'
-                    placeholder="Enter resolution details..."
+                    className='w-full bg-white border-2 border-black p-4 rounded-2xl font-bold text-lg focus:outline-none focus:ring-4 focus:ring-blue-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                    placeholder="Describe the solution..."
                     rows="4"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                   />
                   <button 
                     type="submit"
-                    className='w-full bg-emerald-400 text-black font-black uppercase py-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-emerald-500 transition-colors tracking-widest'
+                    className='w-full bg-black text-white font-black uppercase py-4 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(16,185,129,1)] hover:shadow-none transition-all'
                   >
-                    Commit_Update
+                    Save Response
                   </button>
                 </form>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Footer Meta */}
+        <div className="bg-slate-50 border-t-4 border-black p-6 grid grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="font-black uppercase text-[9px] tracking-widest text-slate-400 italic">Logged Date</span>
+            <span className="font-black text-xs text-black">
+              {new Date(ticket?.createdAt).toLocaleDateString()}
+            </span>
           </div>
         </div>
       </div>

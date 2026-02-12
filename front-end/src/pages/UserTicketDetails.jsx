@@ -57,7 +57,6 @@ const UserTicketDetails = () => {
   return (
     <div className="min-h-screen w-full bg-[#f1f5f9] flex items-center justify-center p-4 md:p-8 font-sans selection:bg-blue-300">
       
-      {/* Neobrutalist Error Toast */}
       {error.state && (
         <div className='fixed top-6 right-6 bg-red-400 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-lg px-6 py-4 z-50 animate-in fade-in slide-in-from-top-4'>
           <p className='text-black font-black uppercase text-xs tracking-widest flex items-center gap-2'>
@@ -91,12 +90,11 @@ const UserTicketDetails = () => {
           </button>
         </div>
 
-        {/* Content Section */}
         <div className="p-8 space-y-10">
           
           {/* Status and ID Row */}
           <div className="flex flex-wrap gap-4">
-            <div className="bg-amber-400 border-2 border-black px-4 py-1 rounded-full font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+            <div className={`${ticket?.status === 'Completed' ? 'bg-emerald-400' : 'bg-amber-400'} border-2 border-black px-4 py-1 rounded-full font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]`}>
               Status: {ticket?.status}
             </div>
             <div className="bg-slate-100 border-2 border-black px-4 py-1 rounded-full font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -108,33 +106,41 @@ const UserTicketDetails = () => {
           <section className="space-y-4">
             <h3 className="font-black uppercase text-sm tracking-widest text-slate-800 italic underline decoration-blue-500 decoration-4">Description</h3>
             <div className="bg-slate-50 border-2 border-black p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              <p className="text-lg font-bold text-black leading-relaxed">
-                {ticket?.description || "No description provided."}
+              <p className="text-lg font-bold text-black leading-relaxed italic">
+                "{ticket?.description || "No description provided."}"
               </p>
             </div>
           </section>
 
-          {/* Solution Block (Only if exists) */}
-          {ticket?.solution && (
-            <section className="space-y-4">
-              <h3 className="font-black uppercase text-sm tracking-widest text-slate-800 italic underline decoration-green-500 decoration-4">Resolution</h3>
-              <div className="bg-green-100 border-2 border-black p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <p className="text-lg font-bold text-black italic">
-                  "{ticket?.solution}"
+          {ticket?.status === 'Completed' && ticket?.response && (
+            <section className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h3 className="font-black uppercase text-sm tracking-widest text-indigo-700 italic underline decoration-indigo-500 decoration-4">
+                Moderator Response
+              </h3>
+              <div className="bg-indigo-50 border-4 border-black p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <p className="text-xl font-black text-indigo-900 leading-tight">
+                  {ticket.response}
                 </p>
+                <div className="mt-4 flex items-center gap-2">
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
+                    <span className="text-[10px] font-black uppercase text-indigo-600 tracking-tighter">Response Complete</span>
+                </div>
               </div>
             </section>
           )}
+
         </div>
 
         {/* Footer Meta */}
         <div className="bg-slate-50 border-t-4 border-black p-6 grid grid-cols-2 gap-4">
           <div className="flex flex-col">
-            <span className="font-black uppercase text-[10px] tracking-widest text-slate-500">Agent Assigned</span>
-            <span className="font-black text-black">{ticket?.assignedTo || "Unassigned"}</span>
+            <span className="font-black uppercase text-[10px] tracking-widest text-slate-500 italic">Agent Assigned</span>
+            <span className="font-black text-black uppercase">
+              {ticket?.assignedTo?.name || "Pending Assignment"}
+            </span>
           </div>
           <div className="flex flex-col items-end">
-            <span className="font-black uppercase text-[10px] tracking-widest text-slate-500">Created At</span>
+            <span className="font-black uppercase text-[10px] tracking-widest text-slate-500 italic">Log Date</span>
             <span className="font-black text-black">
               {new Date(ticket?.createdAt).toLocaleDateString()}
             </span>

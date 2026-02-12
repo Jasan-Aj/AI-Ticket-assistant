@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import TicketDetails from '../pages/TicketDetailsPage';
 
-function ModerateTicketsList({tickets, fetchTickets}) {
+function ModerateTicketsList({ tickets, fetchTickets }) {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const handleTicketClick = (ticket) => {
     setSelectedTicket(ticket);
     setIsModalOpen(true);
@@ -15,112 +15,109 @@ function ModerateTicketsList({tickets, fetchTickets}) {
     setSelectedTicket(null);
   };
 
-  const getStatusColor = (status) => {
-    switch(status.toLowerCase()) {
-      case 'open': return 'bg-red-100 text-red-800';
-      case 'in progress': return 'bg-yellow-100 text-yellow-800';
-      case 'closed': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const getStatusColor = (status = "") => {
+    switch (status.toLowerCase()) {
+      case 'open': return 'bg-rose-400';
+      case 'in progress': return 'bg-amber-400';
+      case 'closed': return 'bg-emerald-400';
+      default: return 'bg-slate-200';
     }
   };
 
-  const getPriorityColor = (priority) => {
-    switch(priority.toLowerCase()) {
-      case 'high': return 'bg-red-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-green-500';
-      default: return 'bg-gray-500';
+  const getPriorityColor = (priority = "") => {
+    switch (priority.toLowerCase()) {
+      case 'high': return 'bg-rose-500';
+      case 'medium': return 'bg-amber-400';
+      case 'low': return 'bg-emerald-400';
+      default: return 'bg-slate-500';
     }
   };
-
-  
 
   return (
-    <div>
-    <div className="p-4 md:p-6">
+    <div className="bg-white">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b-4 border-black">
+              <th className="px-6 py-5 text-left text-xs font-black uppercase italic tracking-widest bg-blue-100 border-r-4 border-black">Title</th>
+              <th className="px-6 py-5 text-left text-xs font-black uppercase italic tracking-widest bg-pink-100 border-r-4 border-black">Status</th>
+              <th className="px-6 py-5 text-left text-xs font-black uppercase italic tracking-widest bg-yellow-100 border-r-4 border-black">Priority</th>
+              <th className="px-6 py-5 text-left text-xs font-black uppercase italic tracking-widest bg-emerald-100">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tickets.map((ticket) => (
+              <tr
+                key={ticket._id || ticket.id}
+                className="border-b-4 border-black hover:bg-slate-50 cursor-pointer transition-colors group"
+                onClick={() => handleTicketClick(ticket)}
+              >
+                <td className="px-6 py-5 border-r-4 border-black font-black text-lg uppercase italic group-hover:text-indigo-600">
+                  {ticket.title}
+                </td>
+                <td className="px-6 py-5 border-r-4 border-black">
+                  <span className={`px-3 py-1 border-2 border-black font-black text-[10px] uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${getStatusColor(ticket.status)}`}>
+                    {ticket.status}
+                  </span>
+                </td>
+                <td className="px-6 py-5 border-r-4 border-black">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-4 h-4 border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] ${getPriorityColor(ticket.priority)}`}></div>
+                    <span className="text-xs font-black uppercase">{ticket.priority}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-5 text-xs font-bold font-mono text-slate-500">
+                  {new Date(ticket.createdAt).toLocaleDateString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-800">My Tickets</h2>
-            </div>
+      {/* Neo-Brutalist Modal */}
+      {isModalOpen && selectedTicket && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 md:p-8">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-[2px]"
+            onClick={closeModal}
+          ></div>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {tickets.map((ticket) => (
-                    <tr 
-                      key={ticket.id} 
-                      className="hover:bg-gray-50 cursor-pointer"
-                      onClick={() => handleTicketClick(ticket)}
-                    >
-                      <td className="px-4 py-3">
-                        <div className="text-sm font-medium text-gray-900">{ticket.title}</div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(ticket.status)}`}>
-                          {ticket.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center">
-                          <span className={`w-3 h-3 rounded-full mr-2 ${getPriorityColor(ticket.priority)}`}></span>
-                          <span className="text-sm text-gray-900">{ticket.priority}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-500">{ticket.createdAt}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {isModalOpen && selectedTicket && (
-          <div className="fixed inset-0 z-50 overflow-y-auto">
-            {/* Backdrop */}
-            <div 
-              className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-              onClick={closeModal}
-            ></div>
+          {/* Modal Content */}
+          <div className="relative bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             
-            {/* Modal Container */}
-            <div className="flex min-h-full items-center justify-center p-4">
-              <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-                {/* Modal Header */}
-                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
-                  <h2 className="text-xl font-semibold text-gray-800">
-                    Ticket Details
-                  </h2>
-                  <button
-                    onClick={closeModal}
-                    className="text-gray-400 hover:text-gray-500 text-2xl font-semibold"
-                  >
-                    ×
-                  </button>
-                </div>
-                
-                <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
-                  <TicketDetails 
-                    ticket={selectedTicket}
-                    closeModal={closeModal}
-                    fetchTickets={fetchTickets}
-                  />
-                </div>
+            {/* Modal Header */}
+            <div className="flex items-center justify-between bg-indigo-500 border-b-4 border-black p-6">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">Case File</span>
+                <h2 className="text-2xl font-black text-white uppercase italic leading-none">
+                  Ticket Details
+                </h2>
+              </div>
+              <button
+                onClick={closeModal}
+                className="bg-black text-white w-12 h-12 border-2 border-white font-black text-2xl flex items-center justify-center hover:bg-rose-500 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="overflow-y-auto p-2 bg-[#FDFCF0]">
+              <div className="bg-white ">
+                <TicketDetails
+                  ticket={selectedTicket}
+                  closeModal={closeModal}
+                  fetchTickets={fetchTickets}
+                />
               </div>
             </div>
           </div>
-        )}
         </div>
-
-          
-  )
+      )}
+    </div>
+  );
 }
 
-export default ModerateTicketsList
+export default ModerateTicketsList;
