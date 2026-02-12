@@ -23,7 +23,7 @@ function CheckAuth({children, protectedRoute}) {
         setLoading(false);
       }
       else{
-        navigate("/dashboard");
+        
         setLoading(false);
       }
     }else{

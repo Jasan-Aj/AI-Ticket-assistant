@@ -92,7 +92,7 @@ export const updateTicket = async (req, res)=>{
     const ticketId = req.params.id;
     const user = req.uset;
     const {response} = req.body;
-
+    console.log("in update ticket");
     try{
         const ticket = await Ticket.findById(ticketId);
         if(!ticket){

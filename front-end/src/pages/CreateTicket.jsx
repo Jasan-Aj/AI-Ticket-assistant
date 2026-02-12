@@ -56,8 +56,12 @@ const CreateTicket = () => {
       if (res.ok) {
         setIsSubmitted(true);
         setTimeout(() => {
-          navigate("/");
+          navigate("/dashboard");
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 6000);
         }, 2000);
+
       } else {
         handleError("Failed to create new ticket");
       }

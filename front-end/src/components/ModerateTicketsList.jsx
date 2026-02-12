@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import TicketDetails from '../pages/TicketDetailsPage';
 
-function ModerateTicketsList({tickets}) {
+function ModerateTicketsList({tickets, fetchTickets}) {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -113,6 +113,8 @@ function ModerateTicketsList({tickets}) {
                 <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
                   <TicketDetails 
                     ticket={selectedTicket}
+                    closeModal={closeModal}
+                    fetchTickets={fetchTickets}
                   />
                 </div>
               </div>

@@ -93,7 +93,7 @@ createRoot(document.getElementById('root')).render(
         <Route
           path='/moderator'
           element = {
-            <CheckAuth protectedRoute={false}>
+            <CheckAuth protectedRoute={true}>
               <Moderator/>
             </CheckAuth>
           }

@@ -31,7 +31,7 @@ export const onTicketCreated = inngest.createFunction(
                 let skills = [];
                 if(aiResponse){
                     await Ticket.findOneAndUpdate(
-                        ticketId,
+                        {_id :ticket._id},
                         {
                             priority: !["low", "medium", "high"].includes(aiResponse.priority) ? "medium" : aiResponse.priority,
                             aiDescription: aiResponse.helpfulNotes,
@@ -46,12 +46,17 @@ export const onTicketCreated = inngest.createFunction(
 
             //step 03: assign moderator
             const moderator = await step.run("assign-modertor", async()=>{
+
+                if (!relatedSkills || relatedSkills.length === 0) {
+                return await User.findOne({ role: "admin" });
+            }
+
                 let user = await User.findOne({
                     role: "moderator",
                     skills: {
                         $elemMatch: {
                             $regex: relatedSkills.join("|"),
-                            $option: "i"
+                            $options: "i"
                         }
                     }
                 });

@@ -3,7 +3,7 @@ import {createAgent, gemini} from "@inngest/agent-kit"
 export const analyzeTicket = async (ticket)=>{
     const supportAgent = createAgent({
     model: gemini({
-    model: "gemini-1.5-flash-8b",
+    model: "gemini-2.5-flash",
         apiKey: process.env.GEMINI_API_KEY 
     }),
         name: "AI Ticket Analytic Assistant",
@@ -48,14 +48,20 @@ export const analyzeTicket = async (ticket)=>{
         - Title: ${ticket.title}
         - Description: ${ticket.description}`);
 
-        const raw = response.output[0].context;
+    
+    const raw = response.text || response.output?.[0]?.content || response.messages?.at(-1)?.content;
 
-    try{
-        const match = raw.match(/```json\s*([\s\S]*?)\s*```/i);
-        const jsonString = match ? match[1] : raw.trim();
+    if (!raw) {
+        console.error("AI returned an empty response. Full response object:", JSON.stringify(response));
+        return null;
+    }
+
+    try {
+        
+        const jsonString = raw.replace(/```json\s?|```/gi, "").trim();
         return JSON.parse(jsonString);
-    }catch(error){
-        console.log("Failed to parse json from AI response: "+ error);
+    } catch (error) {
+        console.error("Failed to parse AI JSON. Raw output:", raw);
         return null;
     }
 }

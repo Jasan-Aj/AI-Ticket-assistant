@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Navbar({title, handleError}) {
     const [isActive, setActive] = useState(false); 
@@ -37,9 +37,9 @@ function Navbar({title, handleError}) {
                 <div className='flex bg-blue-500 justify-between h-16 items-center rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'>
                     
                     {/* Logo Section */}
-                    <div className='pl-6 text-2xl text-white font-black italic tracking-tighter uppercase'>
+                    <Link className='pl-6 text-2xl text-white font-black italic tracking-tighter uppercase' to={"/dashboard"}>
                         Tik<span className='text-amber-300'>Flow.IO</span>
-                    </div>
+                    </Link>
 
                     {/* Page Title */}
                     <div className='hidden md:block font-black text-xl uppercase text-white tracking-widest'>
