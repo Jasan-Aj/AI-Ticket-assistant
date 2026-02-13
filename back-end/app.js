@@ -14,14 +14,14 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.json());
-
 app.use(cors({
   origin: 'https://ai-ticket-assistant-4qfw.vercel.app', // No wildcards!
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use(express.json());
 
 connectDatabase().catch(err => console.error("MongoDB connection error:", err));
 
