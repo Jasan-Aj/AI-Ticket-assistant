@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 
 // In your app.js
-const allowedOrigins = [process.env.FRONT_END_URL, "https://ai-ticket-assistant-4qfw.vercel.app"];
+const allowedOrigins = [process.env.FRONT_END_URL, "https://ai-ticket-assistant-*.app"];
 
 app.use(cors({
   origin: function (origin, callback) {
