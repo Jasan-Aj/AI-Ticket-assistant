@@ -14,8 +14,14 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+    process.env.FRONT_END_URL,
+    process.env.FRONTEND_URL,
+    "http://localhost:5173"
+].filter(Boolean).map(url => url.replace(/\/$/, ""));
+
 app.use(cors({
-    origin: [process.env.FRONTEND_URL],
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
@@ -35,7 +41,7 @@ app.use("/api/inngest", serve({
     functions: [onTicketCreated, onUserSignUp]
 }));
 
-app.get("/",(req, res)=>{
+app.get("/", (req, res) => {
     res.json({
         message: "wellcome"
     })
