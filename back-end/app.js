@@ -15,12 +15,8 @@ const app = express();
 
 app.use(express.json());
 
-// In your app.js
-const allowedOrigins = [process.env.FRONT_END_URL, "https://ai-ticket-assistant-*.app"];
 
-app.use(cors({
-    origin: "https://ai-ticket-assistant-4qfw.vercel.app"
-}));
+app.use(cors());
 
 connectDatabase().catch(err => console.error("MongoDB connection error:", err));
 
@@ -30,10 +26,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/ticket", ticketRoutes);
 
 
-// app.use("/api/inngest", serve({
-//     client: inngest,
-//     functions: [onTicketCreated, onUserSignUp]
-// }));
+app.use("/api/inngest", serve({
+    client: inngest,
+    functions: [onTicketCreated, onUserSignUp]
+}));
 
 
 if (process.env.NODE_ENV !== 'production') {
