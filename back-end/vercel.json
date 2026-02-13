@@ -11,16 +11,5 @@
       "src": "/(.*)",
       "dest": "app.js"
     }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "https://ai-ticket-assistant-4qfw.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS, DELETE" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" },
-        { "key": "Access-Control-Allow-Credentials", "value": "true" }
-      ]
-    }
   ]
 }
