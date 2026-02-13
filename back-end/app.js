@@ -10,6 +10,10 @@ import dotenv from "dotenv";
 import { onUserSignUp } from "./inngest/functions/on-sign-up.js";
 import { onTicketCreated } from "./inngest/functions/on-ticket-create.js";
 
+dotenv.config();
+
+const app = express();
+
 app.use(cors({
   origin:'https://ai-ticket-assistant-4qfw.vercel.app',
   credentials: true,
@@ -17,11 +21,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'OPTIONS']
 }));
 
-dotenv.config();
-const app = express();
+app.options('*', cors());
 
 app.use(express.json());
-
 
 
 connectDatabase().catch(err => console.error("MongoDB connection error:", err));
