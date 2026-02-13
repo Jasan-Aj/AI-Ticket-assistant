@@ -30,6 +30,12 @@ app.use("/api/inngest", serve({
     functions: [onTicketCreated, onUserSignUp]
 }));
 
+app.get("/",(req, res)=>{
+    res.json({
+        message: "wellcome"
+    });
+});
+
 
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 3000;
