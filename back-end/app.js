@@ -44,23 +44,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/ticket", ticketRoutes);
 
 
-app.use("/api/inngest", serve({
-    client: inngest,
-    functions: [onTicketCreated, onUserSignUp]
-}));
-
-
-app.get("/", (req, res) => {
-    res.json({
-        message: "Welcome to AI Ticket Assistant API",
-        status: "online",
-        endpoints: {
-            auth: "/api/auth",
-            users: "/api/users",
-            tickets: "/api/ticket"
-        }
-    });
-});
+// app.use("/api/inngest", serve({
+//     client: inngest,
+//     functions: [onTicketCreated, onUserSignUp]
+// }));
 
 
 if (process.env.NODE_ENV !== 'production') {
