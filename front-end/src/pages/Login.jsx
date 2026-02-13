@@ -36,7 +36,8 @@ function Login() {
       const res = await fetch(`${import.meta.env.VITE_URL}/auth/sign-in`,{
         method: "POST",
         headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
+        credentials: "include"
       });
 
       if(res.ok){

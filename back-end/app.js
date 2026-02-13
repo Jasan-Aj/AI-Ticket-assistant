@@ -16,12 +16,11 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors({
-  origin:'https://ai-ticket-assistant-4qfw.vercel.app',
-  credentials: true,
-  methods: ['GET', 'POST', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'OPTIONS']
-}));
+app.use(cors());
+
+//   credentials: true,
+//   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
 
 connectDatabase().catch(err => console.error("MongoDB connection error:", err));
 
