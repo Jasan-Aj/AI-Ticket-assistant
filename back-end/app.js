@@ -19,18 +19,7 @@ app.use(express.json());
 const allowedOrigins = [process.env.FRONT_END_URL, "https://ai-ticket-assistant-*.app"];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS policy blocked this origin'), false);
-      console.log("CORS policy blocked this origin");
-    }
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+    origin: "https://ai-ticket-assistant-4qfw.vercel.app"
 }));
 
 connectDatabase().catch(err => console.error("MongoDB connection error:", err));
