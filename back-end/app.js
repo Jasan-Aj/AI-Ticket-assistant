@@ -13,8 +13,27 @@ import { onTicketCreated } from "./inngest/functions/on-ticket-create.js";
 dotenv.config();
 const app = express();
 
-app.use(cors());
 app.use(express.json());
+
+// In your app.js
+const allowedOrigins = [process.env.FRONT_END_URL];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS policy blocked this origin'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+
+app.options("*", cors());
 
 
 connectDatabase().catch(err => console.error("MongoDB connection error:", err));
@@ -37,11 +56,11 @@ app.get("/",(req, res)=>{
 });
 
 
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
-
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`);
+    });
+}
 
 export default app;
