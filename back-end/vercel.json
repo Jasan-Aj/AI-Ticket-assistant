@@ -1,6 +1,7 @@
 
 
 {
+    "installCommand": "npm install --legacy-peer-deps",
   "version": 2,
   "builds": [
     {
@@ -15,7 +16,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "app.js"
+      "dest": "/"
     }
   ]
 }
