@@ -14,12 +14,9 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(express.static('dist'));
+
+app.use(cors());
 
 app.use(express.json());
 
