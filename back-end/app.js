@@ -11,6 +11,7 @@ import { onUserSignUp } from "./inngest/functions/on-sign-up.js";
 import { onTicketCreated } from "./inngest/functions/on-ticket-create.js";
 
 dotenv.config();
+
 const app = express();
 
 app.use(express.json());
