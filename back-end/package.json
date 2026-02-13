@@ -23,7 +23,7 @@
   "dependencies": {
     "@inngest/agent-kit": "^0.13.2",
     "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "gitignore": "^0.7.0",
