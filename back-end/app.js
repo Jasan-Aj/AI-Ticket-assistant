@@ -38,7 +38,7 @@ app.use(cors({
 }));
 
 // Handle preflight requests
-app.options("*", cors());
+app.options("/*", cors());  // Add the forward slash
 
 // Request logging middleware (optional but helpful for debugging)
 app.use((req, res, next) => {
