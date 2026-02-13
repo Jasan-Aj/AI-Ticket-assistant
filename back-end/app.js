@@ -15,13 +15,9 @@ const app = express();
 
 app.use(express.json());
 
-
-app.use(cors({
-    origin: "*"
-}));
+app.use(cors());
 
 connectDatabase().catch(err => console.error("MongoDB connection error:", err));
-
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
