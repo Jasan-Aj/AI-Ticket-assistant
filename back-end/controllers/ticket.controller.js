@@ -3,6 +3,7 @@ import { inngest } from "../inngest/client.js";
 
 
 export const createTicket = async(req, res)=>{
+
     try{
         const {title, description} = req.body;
         if(!title || !description){

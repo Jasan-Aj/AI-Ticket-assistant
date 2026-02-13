@@ -10,13 +10,13 @@ export const onUserSignUp = inngest.createFunction(
     },
     {event: "user/sign-up"},
 
-    async (event, step)=>{
+    async ({event, step})=>{
 
         try{
             //step 01: get user
             const user = await step.run("get-user",async()=>{
                 const {email} = event.data;
-                const userObject = await User.findOne(email);
+                const userObject = await User.findOne({email});
 
                 if(!userObject){
                     const error = new Error("User does not exist!");
@@ -37,7 +37,7 @@ export const onUserSignUp = inngest.createFunction(
                 by \n
                 team inngest mailers`;
 
-                await sendMail(user.mail, subject, body);
+                await sendMail(user.email, subject, body);
             });
 
             return {

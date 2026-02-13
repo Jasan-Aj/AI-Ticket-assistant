@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 
 export const authenticate = async (req, res, next)=>{
+    
     try{
         let token;
         if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
@@ -10,7 +11,7 @@ export const authenticate = async (req, res, next)=>{
         }
 
         if(!token){
-            throw new Error();
+            throw new Error("No token exist");
             console.log("no token")
         }
 
@@ -18,16 +19,17 @@ export const authenticate = async (req, res, next)=>{
         const user = await User.findById(decoded.userId);
 
         if(!user){
-            throw new Error();
+            throw new Error("Not authorized");
         }
 
         req.user = user;
         next();
         
     }catch(error){
-        res.status(402).json({
+        res.status(400).json({
             success: false,
             error: "Not authorized!"
         });
+        console.log(error);
     }
 }

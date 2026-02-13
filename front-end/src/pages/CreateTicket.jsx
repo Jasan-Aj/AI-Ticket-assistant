@@ -61,6 +61,7 @@ const CreateTicket = () => {
 
       } else {
         handleError("Failed to create new ticket");
+        console.log(res);
       }
     } catch (error) {
       handleError("Network error. Try again.");
@@ -96,7 +97,7 @@ const CreateTicket = () => {
             New Ticket
           </h2>
           <p className="text-slate-500 font-bold uppercase text-xs mt-2">
-            Log a new issue in the system
+            Write down your issue
           </p>
         </div>
         
