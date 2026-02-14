@@ -14,27 +14,8 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-    process.env.FRONT_END_URL,
-    process.env.FRONTEND_URL,
-    "http://localhost:5173"
-].filter(Boolean).map(url => url.replace(/\/$/, ""));
-
-console.log("Allowed Origins:", allowedOrigins);
-
 app.use(cors({
-    origin: function (origin, callback) {
-        console.log("Request Origin:", origin);
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.log("Blocked Origin:", origin);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    origin: process.env.FRONTEND_URL
 }));
 
 app.use(express.json());
