@@ -20,10 +20,20 @@ const allowedOrigins = [
     "http://localhost:5173"
 ].filter(Boolean).map(url => url.replace(/\/$/, ""));
 
+console.log("Allowed Origins:", allowedOrigins);
+
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+        console.log("Request Origin:", origin);
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log("Blocked Origin:", origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
-    methods: ["GET", "POST", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
