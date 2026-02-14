@@ -57,7 +57,7 @@ const LandingPage = () => {
 
         <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
           <div className="bg-white border-2 border-black px-4 py-1 rounded-full font-black uppercase text-[10px] tracking-[0.3em] mb-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            Powered by GPT-4o + Human Insight
+            Powered by gemini-2.5-flash + Human Insight
           </div>
           
           <h1 className="text-6xl md:text-[110px] font-black uppercase italic leading-[0.85] tracking-tighter mb-10">
@@ -77,7 +77,7 @@ const LandingPage = () => {
 
           <Link to="/signup" className="group relative inline-block">
             <div className="absolute inset-0 bg-black rounded-xl translate-x-2 translate-y-2 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform" />
-            <div className="relative bg-indigo-500 border-4 border-black px-10 py-5 rounded-xl font-black text-white uppercase tracking-widest text-xl transition-transform group-hover:-translate-x-1 group-hover:-translate-y-1">
+            <div className="relative bg-indigo-500 border-4 border-black sm:px-10 px-8 py-5 rounded-xl font-black text-white uppercase tracking-widest text-xl transition-transform group-hover:-translate-x-1 group-hover:-translate-y-1">
               Start Resolving →
             </div>
           </Link>
@@ -104,10 +104,9 @@ const LandingPage = () => {
       <section id="how" className="py-24 px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           <div className="md:col-span-8 bg-blue-50 border-4 border-black p-10 rounded-[2.5rem] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-8 text-6xl font-black text-blue-200 group-hover:text-blue-300 transition-colors">01</div>
             <h3 className="text-4xl font-black uppercase italic mb-6">Automated Triage</h3>
             <p className="text-xl font-bold text-slate-700 max-w-md italic">
-              AI instantly categorizes your ticket and drafts a technical solution before a human even blinks.
+              AI instantly categorizes your ticket and drafts a technical solution and assign moderator before a human even blinks.
             </p>
             <div className="mt-10 h-32 bg-white border-2 border-black border-dashed rounded-2xl flex items-center justify-center">
                <span className="font-mono text-xs text-slate-400">[ Ticket Analysis Sequence... 89% ]</span>

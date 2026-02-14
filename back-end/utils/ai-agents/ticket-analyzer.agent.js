@@ -13,7 +13,7 @@ export const analyzeTicket = async (ticket)=>{
         1. Summarize the issue.
         2. Estimate its priority.
         3. Provide helpful notes and resources links for human moderators.
-        4. List relevant technical skills required.
+        4. List relevant technical skills required, if its realated to any programming language list as its name like Java, Python, JavaScript, etc.
 
         IMPORTANT:
         - Respond with *only* valid raw JSON.
