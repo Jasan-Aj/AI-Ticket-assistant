@@ -47,14 +47,16 @@ The ticket is then automatically assigned to an available moderator who reviews 
 - **TailwindCSS**: Powers the modern, responsive dashboard UI.
 - **JWT & Bcrypt**: Handles secure, role-based authentication and password salting.
 
+
 ## 🔋 <a name="features">Features</a>
 
-👉 **AI Triage & Analysis**: Every ticket is pre-processed by Gemini to provide moderators with solution "cheat sheets."
-👉 **Smart Auto-Assignment**: Background workflows distribute tickets to active moderators automatically.
-👉 **Real-Time Tracking**: Users can watch their ticket status update live from "AI Analyzing" to "Resolved."
-👉 **Role-Based Access**: Dedicated environments for **Admin**, **Moderator**, and **User**.
-👉 **Automated Notifications**: Moderators receive email alerts for new assignments via Inngest.
+👉 **Landing Page**: A fast, engaging homepage that introduces your brand and products with smooth animations and clear calls to action.
 
+👉 **Product Listing Page**: Browse all products with filters, sorting, and real-time availability—powered by Devin AI-generated content for dynamic updates.
+
+👉 **Product Details Page**: Detailed product info, images, and reviews with AI-enhanced descriptions to help customers make confident buying decisions.
+
+👉 **Auth Pages**: Secure and seamless user signup, login, and password recovery using Better Auth, ensuring smooth access without backend hassles.
 ## 🤸 <a name="installation--setup">Installation & Setup</a>
 
 Follow these steps to get the project running locally.
@@ -113,7 +115,7 @@ GEMINI_API_KEY= AIzaSyCs2MaIUlYMsgzWCAEeRBjqSnmzjVFCY7U
 ```bash
 VITE_URL = "your back-end url/api"
 ```
-**Running the Project**
+### 4. Running the Project
 
 ```bash
 # Start Back-end (In back-end terminal)
@@ -122,10 +124,10 @@ npm start
 # Start Front-end (In front-end terminal)
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:5173) in your browser to view the project.
+Open [http://localhost:5173](http://localhost:5173) in your browser to view the project.
 
 ## 📁 Project Structure
-
+```
 .
 ├── back-end/
 │   ├── controllers/         # Logic for tickets and users
@@ -141,6 +143,6 @@ Open [http://localhost:3000](http://localhost:5173) in your browser to view the 
     │   ├── pages/           # Admin, Mod, and User specific views
     │   └── main.jsx         # React entry point
     └── vite.config.js       # Frontend build configuration
-
+```
 
 
