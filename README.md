@@ -66,17 +66,22 @@ Follow these steps to get the project running locally.
 # Clone the repository
 git clone [https://github.com/your-username/tick-flow.git](https://github.com/your-username/tick-flow.git)
 cd tick-flow
+```
 
 # Install Back-end dependencies
+```bash
 cd back-end
 npm install
+```
 
 # Install Front-end dependencies
+```bash
 cd ../front-end
 npm install
+```
 
-```env back-end
-
+# env back-end
+```bash
 PORT=5000
 MONGODB_URI="your_mongodb_connection_string"
 JWT_SECRET="your_secret_key"
@@ -93,9 +98,12 @@ MAILTRAP_SMTP_USER ="Your key"
 MAILTRAP_SMTP_PASS ="Your key"
 
 GEMINI_API_KEY= AIzaSyCs2MaIUlYMsgzWCAEeRBjqSnmzjVFCY7U
+```
 
-```env front-end
+# env front-end
+```bash
 VITE_URL = "your back-end url/api"
+```
 
 **Running the Project**
 
