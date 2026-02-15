@@ -1,7 +1,7 @@
 <div align="center">
   <br />
     <a href="https://ai-ticket-assistant-4qfw.vercel.app/" target="_blank">
-      <img src="https://raw.githubusercontent.com/your-username/your-repo/main/public/readme/hero.webp" alt="Tick Flow Banner">
+      <img src="[https://raw.githubusercontent.com/your-username/your-repo/main/public/readme/hero.webp](https://github.com/Jasan-Aj/AI-Ticket-assistant/blob/main/front-end/public/Gemini_Generated_Image_v2rx9iv2rx9iv2rx.png)" alt="Tick Flow Banner">
     </a>
   <br />
 
