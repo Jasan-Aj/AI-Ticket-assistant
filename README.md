@@ -18,26 +18,28 @@
 
   <h3 align="center">Tick Flow: AI-Powered Ticketing Assistant</h3>
 
-   <div align="center">
-     An intelligent helpdesk solution that bridges the gap between AI automation and human moderation.
-    </div>
+  <div align="center">
+    An intelligent helpdesk solution that bridges the gap between AI automation and human moderation.
+  </div>
 </div>
+
+---
 
 ## 📋 Table of Contents
 
-1. ✨ [Introduction](#introduction)
-2. ⚙️ [Tech Stack](#tech-stack)
-3. 🔋 [Features](#features)
-4. 🤸 [Installation & Setup](#installation--setup)
-5. 📁 [Project Structure](#project-structure)
+1. ✨ [Introduction](#-introduction)
+2. ⚙️ [Tech Stack](#-tech-stack)
+3. 🔋 [Features](#-features)
+4. 🤸 [Installation & Setup](#-installation--setup)
+5. 📁 [Project Structure](#-project-structure)
 
-## <a name="introduction">✨ Introduction</a>
+## ✨ <a name="introduction">Introduction</a>
 
 **Tick Flow** is a high-performance, AI-driven ticketing system designed to streamline customer support. When a user submits a "doubt," the system triggers a background workflow using **Inngest** and **Gemini 2.5 Flash**. The AI instantly analyzes the query to generate a suggested solution and key "helpful points." 
 
 The ticket is then automatically assigned to an available moderator who reviews the AI's insights to provide a fast, accurate response. With real-time progress tracking and role-based access control, Tick Flow ensures that every user query is handled with both AI efficiency and human expertise.
 
-## <a name="tech-stack">⚙️ Tech Stack</a>
+## ⚙️ <a name="tech-stack">Tech Stack</a>
 
 - **Gemini 2.5 Flash**: Acts as the primary intelligence engine for ticket analysis and draft generation.
 - **Inngest**: Manages event-driven background tasks like AI analysis and auto-assignment.
@@ -45,7 +47,7 @@ The ticket is then automatically assigned to an available moderator who reviews 
 - **TailwindCSS**: Powers the modern, responsive dashboard UI.
 - **JWT & Bcrypt**: Handles secure, role-based authentication and password salting.
 
-## <a name="features">🔋 Features</a>
+## 🔋 <a name="features">Features</a>
 
 👉 **AI Triage & Analysis**: Every ticket is pre-processed by Gemini to provide moderators with solution "cheat sheets."
 👉 **Smart Auto-Assignment**: Background workflows distribute tickets to active moderators automatically.
@@ -53,12 +55,12 @@ The ticket is then automatically assigned to an available moderator who reviews 
 👉 **Role-Based Access**: Dedicated environments for **Admin**, **Moderator**, and **User**.
 👉 **Automated Notifications**: Moderators receive email alerts for new assignments via Inngest.
 
-## <a name="installation--setup">🤸 Installation & Setup</a>
+## 🤸 <a name="installation--setup">Installation & Setup</a>
 
 Follow these steps to get the project running locally.
 
 ### 1. Prerequisites
-- [Git](https://git-scm.com/), [Node.js](https://nodejs.org/en/), and [MongoDB](https://www.mongodb.com/) installed.
+- [Git](https://git-scm.com/), [Node.js](https://nodejs.org/), and [MongoDB](https://www.mongodb.com/) installed.
 - A **Gemini API Key** from [Google AI Studio](https://aistudio.google.com/).
 
 ### 2. Cloning & Installation
@@ -66,21 +68,28 @@ Follow these steps to get the project running locally.
 # Clone the repository
 git clone [https://github.com/your-username/tick-flow.git](https://github.com/your-username/tick-flow.git)
 cd tick-flow
-```
 
 # Install Back-end dependencies
+cd back-end
+npm install
+
+# Install Front-end dependencies
+cd ../front-end
+npm install
+
+### 3. Install Back-end dependencies
 ```bash
 cd back-end
 npm install
 ```
 
-# Install Front-end dependencies
+### 4. Install Front-end dependencies
 ```bash
 cd ../front-end
 npm install
 ```
 
-# env back-end
+### 3. env back-end
 ```bash
 PORT=5000
 MONGODB_URI="your_mongodb_connection_string"
@@ -100,11 +109,10 @@ MAILTRAP_SMTP_PASS ="Your key"
 GEMINI_API_KEY= AIzaSyCs2MaIUlYMsgzWCAEeRBjqSnmzjVFCY7U
 ```
 
-# env front-end
+### 3. env front-end
 ```bash
 VITE_URL = "your back-end url/api"
 ```
-
 **Running the Project**
 
 ```bash
